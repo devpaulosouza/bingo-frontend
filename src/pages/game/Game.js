@@ -7,7 +7,8 @@ import { bingoApi } from "../../api/bingoApi";
 import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 
 
-const SOCKET_URL = 'http://192.168.100.97:8080/game';
+// const SOCKET_URL = 'http://192.168.100.97:8080/game';
+const SOCKET_URL = 'https://murmuring-bastion-37173-86d7c2307b3e.herokuapp.com/game';
 
 const Game = () => {
 
