@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Game from './pages/game/Game';
 import Winner from './pages/winner/Winner';
+import Admin from './pages/admin/Admin';
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: '/winner',
     element: <Winner />
+  },
+  {
+    path: '/admin',
+    element: <Admin />
   }
 ])
 

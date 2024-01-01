@@ -4,6 +4,7 @@ import './styles.css'
 import { Button } from "react-bootstrap";
 import SockJsClient from 'react-stomp';
 import { bingoApi } from "../../api/bingoApi";
+import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 
 
 const SOCKET_URL = 'http://192.168.100.97:8080/game';
@@ -152,53 +153,6 @@ const Game = () => {
         )
     }
 
-    const renderNumber = (n) => {
-        let letter;
-        let color;
-
-        if (n <= 15) {
-            letter = 'B';
-            color = '#dc3545'
-        }
-        else if (n <= 30) {
-            letter = 'I';
-            color = '#6610f2'
-        }
-        else if (n <= 45) {
-            letter = 'N';
-            color = '#ffc107'
-        }
-        else if (n <= 60) {
-            letter = 'G';
-            color = '#198754'
-        }
-        else {
-            letter = 'O';
-            color = '#fd7e14'
-        }
-
-        return (
-            <>
-                <div className="row">
-                    <div className="col" style={{ 'color': color }}>
-                        {letter}
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        {n}
-                    </div>
-                </div>
-            </>
-        );
-    }
-
-    const renderDrawnNumbers = () => {
-        return (
-            drawnNumbers?.slice(drawnNumbers.length - 6, drawnNumbers.length - 1)?.map(n => <div className="col text-center"><h4>{renderNumber(n)}</h4></div>)
-        )
-    }
-
     if (winner) {
         return(
             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
@@ -220,7 +174,7 @@ const Game = () => {
                 </div>
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
-                        {renderDrawnNumbers()}
+                        {renderDrawnNumbers(drawnNumbers)}
                     </div>
                 </div>
                 <div className="row mt-4">
