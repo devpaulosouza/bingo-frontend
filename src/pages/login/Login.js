@@ -12,6 +12,8 @@ const Login = () => {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
 
+    const [allowed, setAllowed] = useState(true);
+
     const [res, setRes] = useState('');
 
     const [id] = useState(uuidV4());
@@ -24,27 +26,20 @@ const Login = () => {
 
     const handleUserNameChange = e => {
         setUsername(e.target.value);
+        setAllowed(true);
     }
 
     const handleSubmit = async () => {
-        // try {
-
-        // setRes(JSON.stringify(bingoApi.join()))
-
-        // bingoApi.join({name, username, id})
-        // .then(r => console.log(r))
-        // .catch(e => alert(e))
-
-
+        try {
             const res = await bingoApi.join({ name, username, id });
 
-    
             if (res.status == 200) {
                 navigate('game', { state: { id, numbers: res.data.numbers } });
             }
-        // } catch(e) {
-            // alert(e)
-        // }
+        } catch(e) {
+            console.error(e);
+            setAllowed(false);
+        }
     }
 
     return (
@@ -61,6 +56,15 @@ const Login = () => {
                         <label htmlFor="disabledTextInput" className="form-label">Usuário do X (Twitter)</label>
                         <input type="text" id="disabledTextInput" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} />
                     </div>
+                    {
+                        !allowed && (
+                            <div className="mb-3">
+                                <div class="alert alert-danger" role="alert">
+                                    O usuário não está na lista de jogadores
+                                </div>
+                            </div>
+                        )
+                    }
                     <button type="button" className="btn btn-primary" onClick={handleSubmit}>Jogar</button>
                 </fieldset>
             </form>
