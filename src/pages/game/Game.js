@@ -65,7 +65,7 @@ const Game = () => {
     const renderButtom = (number, i, j) => {
 
         if (i === 2 && j === 2) {
-            return <></>
+            return <Button className='btn-danger bingo-button' disabled> </Button>
         }
 
         return (
