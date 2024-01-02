@@ -51,7 +51,8 @@ const Login = () => {
             const errors = {
                 'Password does not match': 'Senha inválida',
                 'Max players reached': 'Número máximo de jogadores atingido',
-                'Username is not allowed to play in this session': 'Nome de usuário não está na lista de jogadores'
+                'Username is not allowed to play in this session': 'Nome de usuário não está na lista de jogadores',
+                'The game is not accepting new players': 'Jogo em andamento. Aguarde o término deste jogo'
             }
 
             setAllowed(false);
