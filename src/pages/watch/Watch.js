@@ -202,7 +202,7 @@ const Watch = () => {
             </div>
             <div className="row">
                 <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
-                    Números restantes: {75 - drawnNumbers.length}
+                    Números restantes: {75 - (drawnNumbers?.length || 0)}
                 </div>
             </div>
             <hr />

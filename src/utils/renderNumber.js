@@ -41,9 +41,9 @@ const renderNumber = (n) => {
 
 const renderDrawnNumbers = (drawnNumbers) => {
     if (drawnNumbers?.length < 6) {
-    return (
-        drawnNumbers?.slice(0, drawnNumbers.length - 1)?.reverse()?.map(n => <div className="col text-center"><h4>{renderNumber(n)}</h4></div>)
-    )
+        return (
+            drawnNumbers?.slice(0, drawnNumbers.length - 1)?.reverse()?.map(n => <div className="col text-center"><h4>{renderNumber(n)}</h4></div>)
+        )
     }
 
     return (
