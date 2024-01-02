@@ -59,6 +59,10 @@ const Login = () => {
         }
     }
 
+    const handleWatch = () => {
+        navigate('watch');
+    }
+
     const fetchHasPassword = async () => {
         const res = await bingoApi.hasPassword();
 
@@ -100,7 +104,8 @@ const Login = () => {
                             </div>
                         )
                     }
-                    <button type="button" className="btn btn-primary" onClick={handleSubmit}>Jogar</button>
+                    <button type="button" className="btn btn-primary" onClick={handleSubmit} style={{marginRight: 8}}>Jogar</button>
+                    <button type="button" className="btn btn-secondary" onClick={handleWatch}>Assistir</button>
                 </fieldset>
             </form>
         </div>
