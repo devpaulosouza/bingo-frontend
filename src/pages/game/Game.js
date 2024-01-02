@@ -138,6 +138,7 @@ const Game = () => {
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
+            window.location.reload();
         };
 
         resetBoard();
