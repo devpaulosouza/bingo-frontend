@@ -45,6 +45,8 @@ const Game = () => {
                 setStarted(res.data.gameRunning);
                 setMarkedNumbers(res.data.card.markedNumbers)
                 setGameMode(res.data.mode)
+
+                tries = 0;
             }
         } catch (e) {
             console.error(e);
