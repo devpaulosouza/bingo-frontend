@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Game from './pages/game/Game';
 import Winner from './pages/winner/Winner';
 import Admin from './pages/admin/Admin';
+import Watch from './pages/watch/Watch';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: '/admin',
     element: <Admin />
+  }, 
+  {
+    path: '/watch',
+    element: <Watch />
   }
 ])
 
