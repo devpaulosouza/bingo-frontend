@@ -7,7 +7,7 @@ import { bingoApi } from "../../api/bingoApi";
 import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 
 
-// const SOCKET_URL = 'http://192.168.100.97:8080/game';
+// const SOCKET_URL = 'http://localhost:8080/game';
 const SOCKET_URL = 'https://murmuring-bastion-37173-86d7c2307b3e.herokuapp.com/game';
 
 const Game = () => {
@@ -19,6 +19,7 @@ const Game = () => {
     const [number, setNumber] = useState(0);
     const [drawnNumbers, setDrawnNumbers] = useState([]);
     const [winner, setWinner] = useState('');
+    const [gameMode, setGameMode] = useState('');
 
     const navigate = useNavigate();
 
@@ -41,7 +42,8 @@ const Game = () => {
             setNumber(res.data.number);
             setStarted(res.data.gameRunning);
             setMarkedNumbers(res.data.card.markedNumbers)
-        } catch(e) {
+            setGameMode(res.data.mode)
+        } catch (e) {
             console.error(e);
             navigate('/');
         }
@@ -94,6 +96,10 @@ const Game = () => {
         setWinner('');
     }
 
+    const onGameMode = (mode) => {
+        setGameMode(mode);
+    }
+
     useEffect(() => {
         const sseForUsers = new EventSource(
             `${SOCKET_URL}/connect/players/${id}`,
@@ -120,8 +126,11 @@ const Game = () => {
                 case ("WINNER"):
                     onWinner(data.playerId, data.playerName);
                     break;
-                case("CLEAN"):
+                case ("CLEAN"):
                     onClean();
+                    break;
+                case ("GAME_MODE"):
+                    onGameMode(data.mode);
                     break;
             }
         })
@@ -155,7 +164,7 @@ const Game = () => {
     }
 
     if (winner) {
-        return(
+        return (
             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
                 {winner} Ganhou. Aguarde a próxima rodada.
             </div>
@@ -168,6 +177,20 @@ const Game = () => {
             {/* <SockJsClient url={SOCKET_URL} topics={topics} onMessage={handleMessage} onConnect={handleConnected} /> */}
 
             <div className="container container-fluid">
+
+                <div className="col mt-3">
+                    <div className="row">
+                        <div className="col">
+                            <h3>Modo de jogo: {gameMode === 'STANDARD' ? 'Padrão' : 'Blackout'}</h3>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>Instruções: {gameMode === 'STANDARD' ? 'Marque linha, coluna ou diagonal para ganhar' : 'Marque todos os números para ganhar'}</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
                         <h1>{renderNumber(number)}</h1>

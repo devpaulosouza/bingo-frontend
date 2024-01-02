@@ -4,7 +4,7 @@ import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 
-// const SOCKET_URL = 'http://192.168.100.97:8080/game';
+// const SOCKET_URL = 'http://localhost:8080/game';
 const SOCKET_URL = 'https://murmuring-bastion-37173-86d7c2307b3e.herokuapp.com/game';
 
 const id = v4();
@@ -17,6 +17,7 @@ const Admin = () => {
     const [cards, setCards] = useState([]);
     const [started, setStarted] = useState(false);
     const [winners, setWinners] = useState([]);
+    const [gameMode, setGameMode] = useState('');
 
     const onDrawnNumber = (n, dn) => {
         setNumber(n);
@@ -31,6 +32,7 @@ const Admin = () => {
         setNumber(res.data.number);
         setStarted(res.data.gameRunning);
         setWinners(res.data.winners);
+        setGameMode(res.data.mode);
     }
 
     const handleStart = async () => {
@@ -151,20 +153,20 @@ const Admin = () => {
     }
 
     const renderWinners = () => {
-        return(
+        return (
             winners.map(
                 winner => (
                     <>
-                    <div className="row mt-3">
-                        <div className="col">
-                            Ganhador: {winner.name}
+                        <div className="row mt-3">
+                            <div className="col">
+                                Ganhador: {winner.name}
+                            </div>
                         </div>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            @: {winner.username}
+                        <div className="row">
+                            <div className="col">
+                                @: {winner.username}
+                            </div>
                         </div>
-                    </div>
                     </>
                 )
             )
@@ -174,6 +176,20 @@ const Admin = () => {
     return (
         <div>
             Admin
+            <div className="row">
+                <div className="col mt-3">
+                    <div className="row">
+                        <div className="col">
+                            <h3>Modo de jogo: {gameMode === 'STANDARD' ? 'Padrão' : 'Blackout'}</h3>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>Instruções: {gameMode === 'STANDARD' ? 'Marque linha, coluna ou diagonal para ganhar' : 'Marque todos os números para ganhar'}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className="row">
                 <div className="col d-flex justify-content-center mt-3">
                     <h1>{renderNumber(number)}</h1>
@@ -194,7 +210,7 @@ const Admin = () => {
             <div className="row">
                 <div className="col d-flex justify-content-center">
                     <Button onClick={handleStart}>Começar jogo</Button>
-                    <Button onClick={handleRestart} className="btn-danger" style={{'marginLeft': 8}}>Reiniciar jogo</Button>
+                    <Button onClick={handleRestart} className="btn-danger" style={{ 'marginLeft': 8 }}>Reiniciar jogo</Button>
                 </div>
             </div>
             {
