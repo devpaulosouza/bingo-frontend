@@ -34,19 +34,28 @@ const Game = () => {
     const [started, setStarted] = useState(false);
 
     const resetBoard = async () => {
+        let tries = 10;
         try {
-            const res = await bingoApi.getByPlayerId(id);
+            while (tries > 0) {
+                const res = await bingoApi.getByPlayerId(id);
 
-            setNumbers(res.data.card.numbers);
-            setDrawnNumbers(res.data.drawnNumbers);
-            setNumber(res.data.number);
-            setStarted(res.data.gameRunning);
-            setMarkedNumbers(res.data.card.markedNumbers)
-            setGameMode(res.data.mode)
+                setNumbers(res.data.card.numbers);
+                setDrawnNumbers(res.data.drawnNumbers);
+                setNumber(res.data.number);
+                setStarted(res.data.gameRunning);
+                setMarkedNumbers(res.data.card.markedNumbers)
+                setGameMode(res.data.mode)
+            }
         } catch (e) {
             console.error(e);
-            navigate('/');
+            tries = tries - 1;
+
+            if (tries <= 0) {
+
+                navigate('/');
+            }
         }
+
     }
 
 
