@@ -12,6 +12,8 @@ const Login = () => {
     const [name, setName] = useState('');
     const [username, setUsername] = useState('');
 
+    const [message, setMessage] = useState('');
+
     const [allowed, setAllowed] = useState(true);
 
     const [res, setRes] = useState('');
@@ -41,11 +43,19 @@ const Login = () => {
             const res = await bingoApi.join({ name, username, id, password });
 
             if (res.status == 200) {
-                navigate('game', { state: { id, numbers: res.data.numbers } });
+                navigate('game', { state: { id: res.data.player.id, numbers: res.data.numbers } });
             }
         } catch (e) {
             console.error(e);
+
+            const errors = {
+                'Password does not match': 'Senha inválida',
+                'Max players reached': 'Número máximo de jogadores atingido',
+                'Username is not allowed to play in this session': 'Nome de usuário não está na lista de jogadores'
+            }
+
             setAllowed(false);
+            setMessage(errors[e?.response?.data?.detail] || 'Ocorreu um erro')
         }
     }
 
@@ -84,8 +94,8 @@ const Login = () => {
                     {
                         !allowed && (
                             <div className="mb-3">
-                                <div class="alert alert-danger" role="alert">
-                                    O usuário não está na lista de jogadores
+                                <div className="alert alert-danger" role="alert">
+                                    {message}
                                 </div>
                             </div>
                         )
