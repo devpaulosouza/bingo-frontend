@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
 import './styles.css';
@@ -18,6 +18,9 @@ const Login = () => {
 
     const [id] = useState(uuidV4());
 
+    const [hasPassword, setHasPassword] = useState(false);
+    const [password, setPassword] = useState('');
+
     const navigate = useNavigate();
 
     const handleNameChange = e => {
@@ -29,18 +32,32 @@ const Login = () => {
         setAllowed(true);
     }
 
+    const handlePasswordChange = e => {
+        setPassword(e.target.value);
+    }
+
     const handleSubmit = async () => {
         try {
-            const res = await bingoApi.join({ name, username, id });
+            const res = await bingoApi.join({ name, username, id, password });
 
             if (res.status == 200) {
                 navigate('game', { state: { id, numbers: res.data.numbers } });
             }
-        } catch(e) {
+        } catch (e) {
             console.error(e);
             setAllowed(false);
         }
     }
+
+    const fetchHasPassword = async () => {
+        const res = await bingoApi.hasPassword();
+
+        if (res.status == 200) {
+            setHasPassword(res.data.hasPassword);
+        }
+    }
+
+    useEffect(() => { fetchHasPassword()}, [])
 
     return (
         <div className="container-fluid container pt-5">
@@ -56,6 +73,14 @@ const Login = () => {
                         <label htmlFor="disabledTextInput" className="form-label">Usuário do X (Twitter)</label>
                         <input type="text" id="disabledTextInput" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} />
                     </div>
+                    {
+                        hasPassword && (
+                            <div className="mb-3">
+                                <label htmlFor="disabledTextInput" className="form-label">Senha:</label>
+                                <input type="password" id="disabledTextInput" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} />
+                            </div>
+                        )
+                    }
                     {
                         !allowed && (
                             <div className="mb-3">
