@@ -111,7 +111,7 @@ const Game = () => {
         setGameMode(mode);
     }
 
-    useEffect(() => {
+    const connect = () => {
         const sseForUsers = new EventSource(
             `${SOCKET_URL}/connect/players/${id}`,
             {
@@ -149,9 +149,12 @@ const Game = () => {
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
-            window.location.reload();
+            connect();
         };
+    }
 
+    useEffect(() => {
+        connect();
         resetBoard();
     }, []);
 
