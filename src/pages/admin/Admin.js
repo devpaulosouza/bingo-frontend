@@ -162,7 +162,7 @@ const Admin = () => {
                     </div>
                     <div className="row">
                         <div className="col">
-                            @: {winner.name}
+                            @: {winner.username}
                         </div>
                     </div>
                     </>
