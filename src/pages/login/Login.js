@@ -40,7 +40,7 @@ const Login = () => {
 
     const handleSubmit = async () => {
         try {
-            const res = await bingoApi.join({ name, username, id, password });
+            const res = await bingoApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
 
             if (res.status == 200) {
                 navigate('game', { state: { id: res.data.player.id, numbers: res.data.numbers } });
