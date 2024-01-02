@@ -207,7 +207,7 @@ const Game = () => {
                         Números restantes: {75 - (drawnNumbers?.length || 0)}
                     </div>
                 </div>
-                <div className="row mt-4">
+                <div className="row mt-4 d-flex justify-content-center">
                     <div className="col bingo-container jumbotron d-flex align-items-center justify-content-center">
                         {renderRows()}
                     </div>

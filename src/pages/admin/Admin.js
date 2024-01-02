@@ -127,26 +127,27 @@ const Admin = () => {
     const renderBoards = () => {
 
         return (
-
             cards?.map(
                 card => (
-                    <>
-                        <div className="row">
-                            <div className="col text-center">
-                                Jogador: {card.player.name}
+                    <div className="row mt-4">
+                        <div className="col">
+                            <div className="row">
+                                <div className="col text-center">
+                                    Jogador: {card.player.name}
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col text-center">
+                                    Usuário: {card.player.username}
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col jumbotron d-flex align-items-center justify-content-center text-center">
+                                    {renderRows(card)}
+                                </div>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col text-center">
-                                Usuário: {card.player.username}
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col bingo-container jumbotron d-flex align-items-center justify-content-center">
-                                {renderRows(card)}
-                            </div>
-                        </div>
-                    </>
+                    </div>
                 )
             )
         )
@@ -219,9 +220,13 @@ const Admin = () => {
                     <Button onClick={handleRestart} className="btn-danger" style={{ 'marginLeft': 8 }}>Reiniciar jogo</Button>
                 </div>
             </div>
-            {
-                renderBoards()
-            }
+            <div className="row">
+                <div className="col">
+                    {
+                        renderBoards()
+                    }
+                </div>
+            </div>
         </div>
     )
 }
