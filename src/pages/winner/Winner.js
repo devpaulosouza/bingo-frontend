@@ -3,8 +3,8 @@ import React from "react";
 const Winner = () => {
 
     return(
-        <div> 
-            Parabéns! você ganhou
+        <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+            Parabéns! Você ganhou
         </div>
     )
 }

@@ -74,7 +74,7 @@ const Login = () => {
     useEffect(() => { fetchHasPassword()}, [])
 
     return (
-        <div className="container-fluid container pt-5">
+        <div className="container-fluid login-container pt-5">
             <form>
                 <fieldset>
                     <legend>Informe seus dados para jogar</legend>

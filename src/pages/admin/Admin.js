@@ -174,7 +174,7 @@ const Admin = () => {
     }
 
     return (
-        <div>
+        <div className="container">
             Admin
             <div className="row">
                 <div className="col mt-3">
@@ -198,6 +198,12 @@ const Admin = () => {
             <div className="row">
                 <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
                     {renderDrawnNumbers(drawnNumbers)}
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
+                    Números restantes: {75 - drawnNumbers.length}
                 </div>
             </div>
             <hr />
