@@ -104,6 +104,9 @@ const Game = () => {
     const onDrawnNumber = (n, dn) => {
         setNumber(n);
         setDrawnNumbers(dn);
+        if (!started) {
+            setStarted(true);
+        }
     }
 
     const onWinner = (playerId, playerName) => {
