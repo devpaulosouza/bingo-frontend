@@ -5,7 +5,7 @@ import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 
 // const SOCKET_URL = 'http://localhost:8080/game';
-const SOCKET_URL = 'https://murmuring-bastion-37173-86d7c2307b3e.herokuapp.com/game';
+const SOCKET_URL = 'https://sapalimpiadas-backend-76a8b1cd1095.herokuapp.com/game';
 
 const id = v4();
 
@@ -18,6 +18,8 @@ const Admin = () => {
     const [started, setStarted] = useState(false);
     const [winners, setWinners] = useState([]);
     const [gameMode, setGameMode] = useState('');
+
+    const [username, setUsername] = useState('');
 
     const onDrawnNumber = (n, dn) => {
         setNumber(n);
@@ -41,6 +43,10 @@ const Admin = () => {
 
     const handleRestart = async () => {
         await bingoApi.restart();
+    }
+
+    const handleUserNameChange = (e) => {
+        setUsername(e.target.value);
     }
 
     useEffect(
@@ -213,7 +219,13 @@ const Admin = () => {
                     {renderWinners()}
                 </div>
             </div>
+
+            {/* <div className="mb-3">
+                <label htmlFor="disabledTextInput" className="form-label">Filtrar por usuário</label>
+                <input type="text" id="disabledTextInput" className="form-control" placeholder="Filtrar por usuário" value={username} onChange={handleUserNameChange} />
+            </div> */}
             <hr />
+            Número de jogadores: {cards?.length}
             <div className="row">
                 <div className="col d-flex justify-content-center">
                     <Button onClick={handleStart}>Começar jogo</Button>

@@ -5,7 +5,7 @@ import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 
 // const SOCKET_URL = 'http://localhost:8080/game';
-const SOCKET_URL = 'https://murmuring-bastion-37173-86d7c2307b3e.herokuapp.com/game';
+const SOCKET_URL = 'https://sapalimpiadas-backend-76a8b1cd1095.herokuapp.com/game';
 
 const id = v4();
 
