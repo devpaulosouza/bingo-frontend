@@ -68,7 +68,7 @@ const Watch = () => {
                 sseForUsers.addEventListener('message', (event) => {
                     const data = JSON.parse(event.data);
 
-                    switch (data.type) {
+                    switch (data?.type) {
                         case ("DRAWN_NUMBER"):
                             onDrawnNumber(data.number, data.drawnNumbers);
                             break;

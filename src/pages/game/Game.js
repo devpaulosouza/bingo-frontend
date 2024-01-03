@@ -127,7 +127,7 @@ const Game = () => {
         sseForUsers.addEventListener('message', (event) => {
             const data = JSON.parse(event.data);
 
-            switch (data.type) {
+            switch (data?.type) {
                 case ("START"):
                     onStart(data.started);
                     break;
