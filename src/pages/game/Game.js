@@ -66,11 +66,22 @@ const Game = () => {
             return (i === _i && j === _j) ? !markedNumbers[_i][_j] : markedNumbers[_i][_j];
         })));
 
-        await bingoApi.mark({ playerId: id, i, j, marked: !markedNumbers[i][j] });
+        try {
+            await bingoApi.mark({ playerId: id, i, j, marked: !markedNumbers[i][j] });
+        } catch(e) {
+            console.error(e);
+            setMarkedNumbers(markedNumbers.map((r, _i) => r.map((c, _j) => {
+                return (i === _i && j === _j) ? markedNumbers[_i][_j] : markedNumbers[_i][_j];
+            })));
+        }
     }
 
     const handleClickBingo = async () => {
-        await bingoApi.bingo(id);
+        try {
+            await bingoApi.bingo(id);
+        } catch(e) {
+            log.error(e);
+        }
     }
 
     const renderButtom = (number, i, j) => {
