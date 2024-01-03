@@ -49,7 +49,7 @@ const Game = () => {
                 tries = 0;
             }
         } catch (e) {
-            console.error(e);
+            console.log(e);
             tries = tries - 1;
 
             if (tries <= 0) {
@@ -69,7 +69,7 @@ const Game = () => {
         try {
             await bingoApi.mark({ playerId: id, i, j, marked: !markedNumbers[i][j] });
         } catch(e) {
-            console.error(e);
+            console.log(e);
             setMarkedNumbers(markedNumbers.map((r, _i) => r.map((c, _j) => {
                 return (i === _i && j === _j) ? markedNumbers[_i][_j] : markedNumbers[_i][_j];
             })));
@@ -80,7 +80,7 @@ const Game = () => {
         try {
             await bingoApi.bingo(id);
         } catch(e) {
-            log.error(e);
+            console.log(e);
         }
     }
 
