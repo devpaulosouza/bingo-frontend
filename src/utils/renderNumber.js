@@ -51,8 +51,24 @@ const renderDrawnNumbers = (drawnNumbers) => {
     )
 }
 
+const renderAllDrawnNumbers = (drawnNumbers) => {
+
+    const numbers = JSON.parse(JSON.stringify(drawnNumbers));
+
+    const elements = [];
+
+        elements.push(
+            <div className="row">
+                {numbers?.map((n, i) => <><div className="col text-center" style={{maxWidth: 50}}><h4>{renderNumber(n)}</h4></div>{i%10 === 0 && <br />}</>)}
+            </div>
+        )
+
+    return (elements);
+}
+
 
 export {
     renderDrawnNumbers,
+    renderAllDrawnNumbers,
     renderNumber
 };

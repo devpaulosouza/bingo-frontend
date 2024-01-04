@@ -4,7 +4,7 @@ import './styles.css'
 import { Button } from "react-bootstrap";
 import SockJsClient from 'react-stomp';
 import { bingoApi } from "../../api/bingoApi";
-import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
+import { renderAllDrawnNumbers, renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 import NavBar from "../../components/NavBar";
 
 
@@ -244,6 +244,16 @@ const Game = () => {
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
                         <Button className="btn-success" disabled={!started} onClick={handleClickBingo}>BINGO!</Button>
+                    </div>
+                </div>
+                <div className="row mt-4">
+                    <div className="col">
+                        Todos os números sorteados até agora:
+                    </div>
+                </div>
+                <div className="row" style={{marginTop: 16}}>
+                    <div className="col mt-3">
+                        {renderAllDrawnNumbers(drawnNumbers)}
                     </div>
                 </div>
             </ div>
