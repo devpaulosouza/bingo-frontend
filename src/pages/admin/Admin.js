@@ -5,8 +5,7 @@ import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar";
 
-// const SOCKET_URL = 'http://localhost:8080/game';
-const SOCKET_URL = 'https://api.saapatona.com/game';
+const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/game`;
 
 const id = v4();
 
