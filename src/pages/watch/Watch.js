@@ -5,7 +5,7 @@ import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar";
 
-const SOCKET_URL = `${process.env.NODE_ENV === 'production' ? process.env.REACT_APP_PRD_SAAPATONA_API_URL : process.env.REACT_APP_DEV_SAAPATONA_API_URL}/game`;
+const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/game`;
 
 const id = v4();
 
