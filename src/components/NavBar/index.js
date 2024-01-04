@@ -9,7 +9,8 @@ const NavBar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const handleClickHome = () => {
+    const handleClickHome = (e) => {
+        e?.preventDefault();
         navigate('/');
     }
 
@@ -38,7 +39,7 @@ const NavBar = () => {
             className="navbar navbar-expand-lg navbar-dark navbar-custom"
             collapseOnSelect={true}
         >
-            <a className="navbar-brand" onClick={handleClickHome} href="#" style={{ marginLeft: 32 }}>Saapatona</a>
+            <a className="navbar-brand" onClick={handleClickHome} href="/" style={{ marginLeft: 32 }}>Saapatona</a>
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" className="toggle" />
 
