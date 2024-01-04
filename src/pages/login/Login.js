@@ -5,6 +5,7 @@ import './styles.css';
 import { useNavigate, useNavigation } from "react-router-dom";
 import { bingoApi } from "../../api/bingoApi";
 import { v4 as uuidV4 } from "uuid";
+import NavBar from "../../components/NavBar";
 
 
 const Login = () => {
@@ -65,17 +66,23 @@ const Login = () => {
     }
 
     const fetchHasPassword = async () => {
-        const res = await bingoApi.hasPassword();
+        try {
+            const res = await bingoApi.hasPassword();
 
-        if (res.status == 200) {
-            setHasPassword(res.data.hasPassword);
+            if (res.status == 200) {
+                setHasPassword(res.data.hasPassword);
+            }
+        } catch(e) {
+            console.error(e);
         }
     }
 
     useEffect(() => { fetchHasPassword()}, [])
 
     return (
-        <div className="container-fluid login-container pt-5">
+        <>
+        <NavBar />
+        <div className="container-fluid login-container pt-5 mt-4">
             <form>
                 <fieldset>
                     <legend>Informe seus dados para jogar</legend>
@@ -110,6 +117,7 @@ const Login = () => {
                 </fieldset>
             </form>
         </div>
+        </>
     );
 }
 

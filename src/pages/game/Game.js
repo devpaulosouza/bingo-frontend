@@ -5,6 +5,7 @@ import { Button } from "react-bootstrap";
 import SockJsClient from 'react-stomp';
 import { bingoApi } from "../../api/bingoApi";
 import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
+import NavBar from "../../components/NavBar";
 
 
 // const SOCKET_URL = 'http://localhost:8080/game';
@@ -204,6 +205,7 @@ const Game = () => {
     return (
         <>
             {/* <SockJsClient url={SOCKET_URL} topics={topics} onMessage={handleMessage} onConnect={handleConnected} /> */}
+            <NavBar />
 
             <div className="container container-fluid">
 

@@ -1,0 +1,11 @@
+.navbar-custom, .bg-dark {
+    background-color: #4B0082 !important;
+}
+
+.nav-link {
+    margin-left: 32px;
+}
+
+.toggle {
+    margin-right: 32px;
+}

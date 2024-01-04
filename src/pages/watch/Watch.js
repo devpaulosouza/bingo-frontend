@@ -3,6 +3,7 @@ import { v4 } from "uuid";
 import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
+import NavBar from "../../components/NavBar";
 
 // const SOCKET_URL = 'http://localhost:8080/game';
 const SOCKET_URL = 'https://api.saapatona.com/game';
@@ -175,48 +176,51 @@ const Watch = () => {
     }
 
     return (
-        <div className="container">
-            Watch
-            <div className="row">
-                <div className="col mt-3">
-                    <div className="row">
-                        <div className="col">
-                            <h3>Modo de jogo: {gameMode === 'STANDARD' ? 'Padrão' : 'Blackout'}</h3>
+        <>
+            <NavBar />
+            <div className="container">
+                Watch
+                <div className="row">
+                    <div className="col mt-3">
+                        <div className="row">
+                            <div className="col">
+                                <h3>Modo de jogo: {gameMode === 'STANDARD' ? 'Padrão' : 'Blackout'}</h3>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <p>Instruções: {gameMode === 'STANDARD' ? 'Marque linha, coluna ou diagonal para ganhar' : 'Marque todos os números para ganhar'}</p>
+                            </div>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col">
-                            <p>Instruções: {gameMode === 'STANDARD' ? 'Marque linha, coluna ou diagonal para ganhar' : 'Marque todos os números para ganhar'}</p>
-                        </div>
+                </div>
+                <div className="row">
+                    <div className="col d-flex justify-content-center mt-3">
+                        <h1>{renderNumber(number)}</h1>
                     </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col d-flex justify-content-center mt-3">
-                    <h1>{renderNumber(number)}</h1>
+                <div className="row">
+                    <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
+                        {renderDrawnNumbers(drawnNumbers)}
+                    </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
-                    {renderDrawnNumbers(drawnNumbers)}
+                <div className="row">
+                    <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
+                        Números restantes: {75 - (drawnNumbers?.length || 0)}
+                    </div>
                 </div>
-            </div>
-            <div className="row">
-                <div className="col d-flex justify-content-center mt-3  bingo-container jumbotron d-flex align-items-center justify-content-center">
-                    Números restantes: {75 - (drawnNumbers?.length || 0)}
+                <hr />
+                <div className="row">
+                    <div className="col">
+                        {renderWinners()}
+                    </div>
                 </div>
+                <hr />
+                {
+                    renderBoards()
+                }
             </div>
-            <hr />
-            <div className="row">
-                <div className="col">
-                    {renderWinners()}
-                </div>
-            </div>
-            <hr />
-            {
-                renderBoards()
-            }
-        </div>
+        </>
     )
 }
 
