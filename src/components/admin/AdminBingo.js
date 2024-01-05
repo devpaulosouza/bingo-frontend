@@ -49,8 +49,8 @@ const AdminBingo = () => {
         await bingoApi.restart();
     }
 
-    const handleUserNameChange = (e) => {
-        setUsername(e.target.value);
+    const handleKickAll = async () => {
+        await bingoApi.kickAll();
     }
 
     useEffect(
@@ -236,6 +236,7 @@ const AdminBingo = () => {
                     <div className="col d-flex justify-content-center">
                         <Button onClick={handleStart}>Começar jogo</Button>
                         <Button onClick={handleRestart} className="btn-danger" style={{ 'marginLeft': 8 }}>Reiniciar jogo</Button>
+                        <Button onClick={handleKickAll} className="btn-danger" style={{ 'marginLeft': 8 }}>Kickar jogadores</Button>
                     </div>
                 </div>
                 <div className="row">

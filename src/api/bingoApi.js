@@ -8,5 +8,6 @@ export const bingoApi = {
     getAll: () => axiosConfig.get(`/games/bingo/admin`),
     start: () => axiosConfig.post(`/games/bingo/start`),
     restart: () => axiosConfig.post(`/games/bingo/clean`),
+    kickAll: () => axiosConfig.post(`/games/bingo/kick-all`),
     hasPassword: () => axiosConfig.get(`/games/bingo/has-password`),
 }

@@ -19,6 +19,7 @@ const Game = () => {
     const [number, setNumber] = useState(0);
     const [drawnNumbers, setDrawnNumbers] = useState([]);
     const [winner, setWinner] = useState('');
+    const [winnerId, setWinnerId] = useState('');
     const [gameMode, setGameMode] = useState('');
 
     const navigate = useNavigate();
@@ -68,7 +69,7 @@ const Game = () => {
 
         try {
             await bingoApi.mark({ playerId: id, i, j, marked: !markedNumbers[i][j] });
-        } catch(e) {
+        } catch (e) {
             console.log(e);
             setMarkedNumbers(markedNumbers.map((r, _i) => r.map((c, _j) => {
                 return (i === _i && j === _j) ? markedNumbers[_i][_j] : markedNumbers[_i][_j];
@@ -79,7 +80,7 @@ const Game = () => {
     const handleClickBingo = async () => {
         try {
             await bingoApi.bingo(id);
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
     }
@@ -110,9 +111,7 @@ const Game = () => {
     }
 
     const onWinner = (playerId, playerName) => {
-        if (playerId === id) {
-            navigate('/winner');
-        }
+        setWinnerId(playerId);
         setWinner(playerName);
     }
 
@@ -123,6 +122,10 @@ const Game = () => {
 
     const onGameMode = (mode) => {
         setGameMode(mode);
+    }
+
+    const onKick = () => {
+        navigate('/');
     }
 
     const connect = () => {
@@ -156,6 +159,10 @@ const Game = () => {
                     break;
                 case ("GAME_MODE"):
                     onGameMode(data.mode);
+                    break;
+                case ("KICK"):
+                    onKick();
+                    sseForUsers.close();
                     break;
             }
         })
@@ -192,11 +199,25 @@ const Game = () => {
         )
     }
 
-    if (winner) {
+    if (winnerId) {
+
+        if (winnerId === id) {
+            return (
+                <>
+                    <NavBar />
+                    <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                        Parabéns {winner}, você ganhou!
+                    </div>
+                </>
+            )
+        }
+
         return (
-            <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                {winner} Ganhou. Aguarde a próxima rodada.
-            </div>
+            <>
+                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                    {winner} Ganhou. Aguarde a próxima rodada.
+                </div>
+            </>
         )
     }
 
@@ -251,7 +272,7 @@ const Game = () => {
                         Todos os números sorteados até agora:
                     </div>
                 </div>
-                <div className="row" style={{marginTop: 16}}>
+                <div className="row" style={{ marginTop: 16 }}>
                     <div className="col mt-3">
                         {renderAllDrawnNumbers(drawnNumbers)}
                     </div>
