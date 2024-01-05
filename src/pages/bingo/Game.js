@@ -8,7 +8,7 @@ import { renderAllDrawnNumbers, renderDrawnNumbers, renderNumber } from "../../u
 import NavBar from "../../components/NavBar";
 
 
-const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/game`;
+const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/bingo`;
 
 const Game = () => {
 
