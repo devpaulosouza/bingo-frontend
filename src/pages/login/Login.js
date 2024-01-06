@@ -88,18 +88,18 @@ const Login = () => {
                     <legend>Informe seus dados para jogar</legend>
                     <p>{res}</p>
                     <div className="mb-3">
-                        <label htmlFor="disabledTextInput" className="form-label">Nome</label>
-                        <input type="text" id="disabledTextInput" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
+                        <label htmlFor="name" className="form-label">Nome</label>
+                        <input type="text" id="name" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="disabledTextInput" className="form-label">Usuário do X (Twitter)</label>
-                        <input type="text" id="disabledTextInput" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} />
+                        <label htmlFor="username" className="form-label">Usuário do X (Twitter)</label>
+                        <input type="text" id="username" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} />
                     </div>
                     {
                         hasPassword && (
                             <div className="mb-3">
-                                <label htmlFor="disabledTextInput" className="form-label">Senha:</label>
-                                <input type="text" id="disabledTextInput" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} />
+                                <label htmlFor="password" className="form-label">Senha:</label>
+                                <input type="text" id="password" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} />
                             </div>
                         )
                     }
