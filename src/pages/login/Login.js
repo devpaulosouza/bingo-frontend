@@ -99,7 +99,7 @@ const Login = () => {
                         hasPassword && (
                             <div className="mb-3">
                                 <label htmlFor="disabledTextInput" className="form-label">Senha:</label>
-                                <input type="password" id="disabledTextInput" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} />
+                                <input type="text" id="disabledTextInput" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} />
                             </div>
                         )
                     }
