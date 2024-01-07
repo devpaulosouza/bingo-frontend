@@ -27,6 +27,8 @@ const Login = () => {
 
     const [gameType, setGameType] = useState('BINGO');
 
+    const[connection, setConnection] = useState(null);
+
     const navigate = useNavigate();
 
     const handleNameChange = e => {
@@ -55,6 +57,11 @@ const Login = () => {
             if (res.status == 200) {
                 navigate('game', { state: { id: res.data.player.id, numbers: res.data.numbers, gameType } });
             }
+
+            if (connection) {
+                connection.close();
+            }
+
         } catch (e) {
             console.error(e);
 
@@ -72,6 +79,9 @@ const Login = () => {
 
     const handleWatch = () => {
         navigate('watch');
+        if (connection) {
+            connection.close();
+        }
     }
 
     const fetchHasPassword = async () => {
@@ -126,6 +136,7 @@ const Login = () => {
             sseForUsers.close();
             connect();
         };
+        setConnection(sseForUsers);
     }
 
     useEffect(() => {

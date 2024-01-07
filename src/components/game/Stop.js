@@ -13,6 +13,10 @@ const GameStop = () => {
 
     const [letter, setLetter] = useState('');
     const [words, setWords] = useState('');
+    const [drawnWords, setDrawnWords] = useState([]);
+
+    const [stopUsername, setStopUsername] = useState('');
+    const [stopped, setStopped] = useState(false);
 
     const location = useLocation();
 
@@ -20,39 +24,60 @@ const GameStop = () => {
 
     const navigate = useNavigate();
 
-    const handleClickStop = () => {
-        
+    const handleClickStop = async () => {
+        try {
+            const res = await stopApi.stop(id);
+
+        } catch (e) {
+            console.error(e);
+        }
     }
 
-    let range = function* (start, stop, step = 1) {
-        if (stop == null) { stop = start; start = 0; }
-        let l = Math.ceil((stop - start) / step);
-        for (let i = 0; i < l; i++)yield start + i * step;
+    const debounce = (mainFunction, delay) => {
+        // Declare a variable called 'timer' to store the timer ID
+        let timer;
+
+        // Return an anonymous function that takes in any number of arguments
+        return function (...args) {
+            // Clear the previous timer to prevent the execution of 'mainFunction'
+            clearTimeout(timer);
+
+            // Set a new timer that will execute 'mainFunction' after the specified delay
+            timer = setTimeout(() => {
+                mainFunction(...args);
+            }, delay);
+        };
     };
 
-    const Line = ({ idx }) => {
-        const [value, setValue] = useState('');
+    const Line = ({ name, word, idx }) => {
+        const [value, setValue] = useState(word);
 
         const handleValueChange = (e) => {
             setValue(e.target.value);
+
+            debounce(async () => {
+                try {
+                    await stopApi.setWord(id, { playerId: id, position: idx, word: e.target.value })
+                } catch (e) {
+                    console.error(e);
+                }
+            })();
         }
 
         return (
             <div className="mb-3">
                 {/* <label htmlFor="name" className="form-label">Nome</label> */}
-                <input type="text" id="name" className="form-control" placeholder="Nome" value={value} onChange={handleValueChange} autoComplete="off" role="presentation" />
+                <input type="text" id="name" className="form-control" placeholder={name} value={value} onChange={handleValueChange} autoComplete="off" role="presentation" />
             </div>
         )
     }
 
     const Lines = () => {
-
-
         return (
             <div className="container-fluid login-container pt-5 mt-4">
                 <form>
                     <fieldset>
-                        {[...range(0, 10)].map(i => <Line idx={i} key={JSON.stringify(i)}/>)}
+                        {drawnWords?.map((i, idx) => <Line name={i} word={words[idx]} idx={idx} key={JSON.stringify(i)} />)}
                     </fieldset>
                 </form>
             </div>
@@ -68,6 +93,11 @@ const GameStop = () => {
         }
     }
 
+    const onStop = (un, s) =>{
+        setStopUsername(un);
+        setStopped(s);
+    }
+
     const onKick = () => {
         navigate('/');
     }
@@ -75,19 +105,28 @@ const GameStop = () => {
 
     const resetGame = async () => {
         try {
+            if (!id) {
+                navigate('/');
+                return;
+            }
             const res = await stopApi.get(id);
 
             if (res.status === 200) {
                 setLetter(res.data.letter);
                 setWords(res.data.words)
+                setDrawnWords(res.data.drawnWords);
             }
-        } catch(e) {
+        } catch (e) {
             console.error(e);
         }
 
     }
 
     const connect = () => {
+        if (!id) {
+            navigate('/');
+            return;
+        }
         const sseForUsers = new EventSource(
             `${SOCKET_URL}/connect/players/${id}`,
             {
@@ -106,6 +145,9 @@ const GameStop = () => {
             switch (data?.type) {
                 case ("START"):
                     onStart(data.started);
+                    break;
+                case ("STOP_STOPPED"):
+                    onStop(data.playerName, data.stopped);
                     break;
                 case ("KICK"):
                     onKick();
@@ -138,12 +180,24 @@ const GameStop = () => {
         )
     }
 
+
+    if (stopped) {
+        return (
+            <>
+                <NavBar />
+                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                    {stopUsername ? `${stopUsername} parou o jogo! Aguarde para revisar as palavras` : `O tempo acabou! Aguarde para revisar as palavras`}
+                </div>
+            </>
+        )
+    }
+
     return (
         <>
             <NavBar />
             <div className="container">
 
-            <div className="col mt-3">
+                <div className="col mt-3">
                     <div className="row">
                         <div className="col text-center">
                             <h3>Letra: {letter}</h3>

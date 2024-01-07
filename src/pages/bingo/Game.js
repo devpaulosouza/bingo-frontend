@@ -8,7 +8,7 @@ const Game = () => {
     
     console.log(location.state)
 
-    if (location.state.gameType === 'BINGO') {
+    if (location.state?.gameType === 'BINGO') {
         return (
             <GameBingo />
         )
