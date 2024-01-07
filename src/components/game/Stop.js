@@ -312,7 +312,7 @@ const GameStop = () => {
     }
 
 
-    if (stopped) {
+    if (stopped && validateWordCount === null) {
         return (
             <>
                 <NavBar />
