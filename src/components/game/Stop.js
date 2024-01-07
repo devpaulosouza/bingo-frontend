@@ -181,6 +181,7 @@ const GameStop = () => {
 
     const onValidateWordCount = count => {
         setStopped(false);
+        setValidatingWords(false)
         resetGame();
     }
 
