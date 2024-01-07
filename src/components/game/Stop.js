@@ -249,18 +249,13 @@ const GameStop = () => {
 
     }
 
-    useEffect(() => {
-        
-        if (!refresh) {
+    const onPing = async () => {
+        // console.log('pingou')
+        if (canStop) {
             return;
         }
 
         setCanStop(true);
-        setRefresh(false);
-    }, [refresh])
-
-    const onPing = async () => {
-        setRefresh(true);
     }
 
     const connect = () => {
