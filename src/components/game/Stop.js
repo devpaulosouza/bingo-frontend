@@ -13,7 +13,8 @@ const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/stop`;
 const GameStop = () => {
 
     const [letter, setLetter] = useState('');
-    const [words, setWords] = useState('');
+    const [words, setWords] = useState([]);
+    const [wordsField, setWordsField] = useState([null, null, null]);
     const [drawnWords, setDrawnWords] = useState([]);
 
     const [stopUsername, setStopUsername] = useState('');
@@ -72,6 +73,10 @@ const GameStop = () => {
         const handleValueChange = (e) => {
             setValue(e.target.value);
 
+            wordsField[idx] = true;
+
+            setWordsField(wordsField)
+
             debounce(async () => {
                 try {
                     await stopApi.setWord(id, { playerId: id, position: idx, word: e.target.value })
@@ -80,6 +85,7 @@ const GameStop = () => {
                 }
             })();
         }
+
 
         return (
             <div className="mb-3">
@@ -225,10 +231,6 @@ const GameStop = () => {
                 setOtherPlayersPosition(res.data.otherPlayersPosition);
                 setStopped(res.data.stopped);
                 setValidatingWords(res.data.validatingWords);
-
-                if (!canStop) {
-                    setTimeout(() => { setCanStop(true); resetGame() }, 20000)
-                }
             }
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -357,7 +359,7 @@ const GameStop = () => {
         )
     }
 
-    console.log(words.length, drawnWords.length)
+    console.log('words', words, drawnWords, words.length, drawnWords.length, wordsField.length)
 
     if (validateWordCount !== null) {
         return (
@@ -427,7 +429,7 @@ const GameStop = () => {
                 <Lines />
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
-                        <Button className="btn-success" disabled={(!canStop) || (words?.filter(w => !!w)?.length !== drawnWords?.length)} onClick={handleClickStop}>STOP!</Button>
+                        <Button className="btn-success" disabled={(wordsField?.filter(w => !!w)?.length !== drawnWords?.length)} onClick={handleClickStop}>STOP!</Button>
                     </div>
                 </div>
             </div>
