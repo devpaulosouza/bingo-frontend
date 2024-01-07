@@ -252,12 +252,8 @@ const GameStop = () => {
             if (canStop) {
                 return;
             }
-            
-            const res = await stopApi.get(id);
 
-            if (res.data.canStopAt && moment(res.data.canStopAt).isBefore(moment())) {
-                setCanStop(true);
-            }
+            setCanStop(true);
 
         } catch(e) {
 
