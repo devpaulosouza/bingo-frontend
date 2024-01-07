@@ -270,6 +270,10 @@ const GameStop = () => {
         setCanStop(true);
     }
 
+    useEffect(() => {
+        resetGame();
+    },[canStop])
+
     const connect = () => {
         if (!id) {
             navigate('/');
