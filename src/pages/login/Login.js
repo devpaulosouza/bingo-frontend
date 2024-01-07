@@ -93,13 +93,13 @@ const Login = () => {
                     </div>
                     <div className="mb-3">
                         <label htmlFor="username" className="form-label">Usuário do X (Twitter)</label>
-                        <input type="text" id="username" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} spellCheck="false" autoCapitalize="none" autoCorrect="false"/>
+                        <input type="text" id="username" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} spellCheck="false" autoCapitalize="none" autoCorrect="off"/>
                     </div>
                     {
                         hasPassword && (
                             <div className="mb-3">
                                 <label htmlFor="password" className="form-label">Senha:</label>
-                                <input type="text" id="password" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} spellCheck="false" autoCapitalize="none" autoCorrect="false" />
+                                <input type="text" id="password" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} spellCheck="false" autoCapitalize="none" autoCorrect="off" />
                             </div>
                         )
                     }
