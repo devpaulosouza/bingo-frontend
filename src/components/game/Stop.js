@@ -183,9 +183,6 @@ const GameStop = () => {
 
     const onStart = (started) => {
         setDraw(false);
-        setTimeout(() => {
-            resetGame();
-        }, 20000)
 
         if (!started) {
             setLetter('');
@@ -324,7 +321,7 @@ const GameStop = () => {
             setTimeout(connect, 3000)
             sseForUsers.close();
         };
-        setConnection(sseForUsers);
+        // setConnection(sseForUsers);
     }
 
     useEffect(() => {
