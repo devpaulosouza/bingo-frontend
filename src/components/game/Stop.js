@@ -38,6 +38,8 @@ const GameStop = () => {
 
     const [games, setGames] = useState([]);
 
+    const [connection, setConnection] = useState(null);
+
     const location = useLocation();
 
     const id = location.state?.id;
@@ -242,15 +244,13 @@ const GameStop = () => {
             console.error(e, e?.response?.data?.detail);
             if (e?.response?.data?.detail === 'Player was not found') {
                 navigate('/')
-            } else {
-                callback();
             }
         }
 
     }
 
     const onPing = async () => {
-        // console.log('pingou')
+        console.log('pingou')
         if (canStop) {
             return;
         }
@@ -306,9 +306,10 @@ const GameStop = () => {
 
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
-            resetGame(() => setTimeout(connect, 3000));
+            setTimeout(connect, 3000)
             sseForUsers.close();
         };
+        setConnection(sseForUsers);
     }
 
     useEffect(() => {
