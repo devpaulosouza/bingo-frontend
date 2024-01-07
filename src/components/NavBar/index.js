@@ -28,8 +28,6 @@ const NavBar = () => {
         }
     }
 
-    console.log(location.pathname)
-
 
     return (
         <Navbar

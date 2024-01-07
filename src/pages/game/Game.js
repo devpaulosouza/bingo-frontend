@@ -5,8 +5,6 @@ import GameStop from "../../components/game/Stop";
 
 const Game = () => {
     const location = useLocation();
-    
-    console.log(location.state)
 
     if (location.state?.gameType === 'BINGO') {
         return (

@@ -14,8 +14,7 @@ const GameStop = () => {
 
     const [letter, setLetter] = useState('');
     const [words, setWords] = useState([]);
-    const [wordsField, setWordsField] = useState([null, null, null]);
-    const [drawnWords, setDrawnWords] = useState([]);
+    const [drawnWords, setDrawnWords] = useState(['Arvore']);
 
     const [stopUsername, setStopUsername] = useState('');
     const [stopped, setStopped] = useState(false);
@@ -67,16 +66,12 @@ const GameStop = () => {
         };
     };
 
-    const Line = ({ name, word, idx }) => {
-        const [value, setValue] = useState(word);
+    const Line = ({ name, value, idx, onChange }) => {
+
+        const [v, setV] = useState(value || '')
 
         const handleValueChange = (e) => {
-            setValue(e.target.value);
-
-            wordsField[idx] = true;
-
-            setWordsField(wordsField)
-
+            setV(e.target.value);
             debounce(async () => {
                 try {
                     await stopApi.setWord(id, { playerId: id, position: idx, word: e.target.value })
@@ -90,17 +85,17 @@ const GameStop = () => {
         return (
             <div className="mb-3">
                 {/* <label htmlFor="name" className="form-label">Nome</label> */}
-                <input type="text" id="name" className="form-control" placeholder={name} value={value} onChange={handleValueChange} autoComplete="off" role="presentation" />
+                <input type="text" id="name" className="form-control" placeholder={name} value={v} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
             </div>
         )
     }
 
-    const Lines = () => {
+    const renderLines = () => {
         return (
             <div className="container-fluid login-container pt-5 mt-4">
                 <form>
                     <fieldset>
-                        {drawnWords?.map((i, idx) => <Line name={i} word={words[idx]} idx={idx} key={JSON.stringify(i)} />)}
+                        {drawnWords?.map((i, idx) => <Line name={i} value={words[idx]} idx={idx} key={JSON.stringify(i)} />)}
                     </fieldset>
                 </form>
             </div>
@@ -168,6 +163,10 @@ const GameStop = () => {
 
     const onStart = (started) => {
         setDraw(false);
+        setTimeout(() => {
+            resetGame();
+        }, 20000)
+
         if (!started) {
             setLetter('');
         }
@@ -212,8 +211,6 @@ const GameStop = () => {
         stopApi.invalidate(id, { playerPosition: position, position: validateWordCount, valid: false })
     }
 
-    console.log(canStopAt)
-
     const resetGame = async (callback = () => { }) => {
         try {
             if (!id) {
@@ -223,14 +220,28 @@ const GameStop = () => {
             const res = await stopApi.get(id);
 
             if (res.status === 200) {
+
+                if (res.data.words?.filter(w => !!w)?.length !== 0) {
+                    setWords(res.data.words);
+                }
+
                 setLetter(res.data.letter);
-                setWords(res.data.words)
                 setDrawnWords(res.data.drawnWords);
                 setValidateWordCount(res.data.validateWordCount);
                 setOtherPlayersWords(res.data.otherPlayersWords);
                 setOtherPlayersPosition(res.data.otherPlayersPosition);
                 setStopped(res.data.stopped);
                 setValidatingWords(res.data.validatingWords);
+
+                // setCanStop(true);
+
+                if (res.data.canStopAt && moment(res.data.canStopAt).isBefore(moment())) {
+                    setCanStop(true);
+                } 
+                
+                // else {
+                //     setTimeout(() => setCanStop(true), 20000)
+                // }
             }
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -325,7 +336,6 @@ const GameStop = () => {
         )
     }
 
-    console.log(games)
     if (winnerId) {
         return (
             <>
@@ -333,7 +343,7 @@ const GameStop = () => {
                 <div style={{ height: '100%' }}>
                     <div className="row">
                         <div className="col">
-                            {winnerId === id ? `Parabéns! Você ganhou` : `O jogador ${winnerName} ganhou!`}
+                            {winnerId === id ? `Parabéns! Você ganhou` : `${winnerName} ganhou o jogo!`}
                         </div>
                     </div>
                     <TableWinners />
@@ -358,8 +368,6 @@ const GameStop = () => {
             </>
         )
     }
-
-    console.log('words', words, drawnWords, words.length, drawnWords.length, wordsField.length)
 
     if (validateWordCount !== null) {
         return (
@@ -426,10 +434,10 @@ const GameStop = () => {
                         </div>
                     </div>
                 </div>
-                <Lines />
+                {renderLines()}
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
-                        <Button className="btn-success" disabled={(wordsField?.filter(w => !!w)?.length !== drawnWords?.length)} onClick={handleClickStop}>STOP!</Button>
+                        <Button className="btn-success" disabled={!canStop} onClick={handleClickStop}>STOP!</Button>
                     </div>
                 </div>
             </div>
