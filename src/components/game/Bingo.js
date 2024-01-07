@@ -10,7 +10,7 @@ import NavBar from "../../components/NavBar";
 
 const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/bingo`;
 
-const Game = () => {
+const GameBingo = () => {
 
     const location = useLocation();
     const id = location.state?.id;
@@ -170,7 +170,7 @@ const Game = () => {
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
-            connect();
+            setTimeout(connect, 2000);
         };
     }
 
@@ -282,4 +282,4 @@ const Game = () => {
     )
 }
 
-export default Game;
+export default GameBingo;

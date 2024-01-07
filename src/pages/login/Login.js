@@ -6,7 +6,10 @@ import { useNavigate, useNavigation } from "react-router-dom";
 import { bingoApi } from "../../api/bingoApi";
 import { v4 as uuidV4 } from "uuid";
 import NavBar from "../../components/NavBar";
+import { gameApi } from "../../api/gameApi";
+import { stopApi } from "../../api/stopApi";
 
+const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games`;
 
 const Login = () => {
 
@@ -17,12 +20,14 @@ const Login = () => {
 
     const [allowed, setAllowed] = useState(true);
 
-    const [res, setRes] = useState('');
-
     const [id] = useState(uuidV4());
 
     const [hasPassword, setHasPassword] = useState(false);
     const [password, setPassword] = useState('');
+
+    const [gameType, setGameType] = useState('BINGO');
+
+    const[connection, setConnection] = useState(null);
 
     const navigate = useNavigate();
 
@@ -41,11 +46,22 @@ const Login = () => {
 
     const handleSubmit = async () => {
         try {
-            const res = await bingoApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
+            let res;
+
+            if (gameType === 'BINGO') {
+                res = await bingoApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
+            } else {
+                res = await stopApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
+            }
 
             if (res.status == 200) {
-                navigate('game', { state: { id: res.data.player.id, numbers: res.data.numbers } });
+                navigate('game', { state: { id: res.data.player.id, numbers: res.data.numbers, gameType } });
             }
+
+            if (connection) {
+                connection.close();
+            }
+
         } catch (e) {
             console.error(e);
 
@@ -63,6 +79,9 @@ const Login = () => {
 
     const handleWatch = () => {
         navigate('watch');
+        if (connection) {
+            connection.close();
+        }
     }
 
     const fetchHasPassword = async () => {
@@ -72,12 +91,59 @@ const Login = () => {
             if (res.status == 200) {
                 setHasPassword(res.data.hasPassword);
             }
+
+            const configRes = await gameApi.getConfig();
+
+            if (configRes.status == 200) {
+                setGameType(configRes.data.gameType);
+            }
+
         } catch(e) {
             console.error(e);
         }
     }
 
-    useEffect(() => { fetchHasPassword()}, [])
+    const onGameTypeChanged = (type) => {
+        setGameType(type);
+        fetchHasPassword();
+    }
+
+
+    const connect = () => {
+        const sseForUsers = new EventSource(
+            `${SOCKET_URL}/watch`,
+            {
+                withCredentials: false,
+            }
+        );
+
+
+        sseForUsers.onopen = (e) => {
+            console.log("SSE 3 Connected !");
+        };
+
+        sseForUsers.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+
+            switch (data?.type) {
+                case ("GAME_TYPE"):
+                    onGameTypeChanged(data.gameType);
+                    break;
+            }
+        })
+
+        sseForUsers.onerror = (error) => {
+            console.log("SSE For Users error", error);
+            sseForUsers.close();
+            setTimeout(connect, 5000);
+        };
+        setConnection(sseForUsers);
+    }
+
+    useEffect(() => {
+        connect();
+        fetchHasPassword();
+    }, []);
 
     return (
         <>
@@ -86,7 +152,7 @@ const Login = () => {
             <form>
                 <fieldset>
                     <legend>Informe seus dados para jogar</legend>
-                    <p>{res}</p>
+                    <p>Jogo: {gameType === 'BINGO' ? 'Bingo' : 'Stop'}</p>
                     <div className="mb-3">
                         <label htmlFor="name" className="form-label">Nome</label>
                         <input type="text" id="name" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
