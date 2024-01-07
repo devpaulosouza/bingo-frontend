@@ -250,14 +250,8 @@ const GameStop = () => {
     }
 
     useEffect(() => {
-
-        console.log(canStop, letter)
         
         if (!refresh) {
-            return;
-        }
-
-        if (canStop || !letter) {
             return;
         }
 
