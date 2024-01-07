@@ -170,7 +170,7 @@ const GameBingo = () => {
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
-            connect();
+            setTimeout(connect, 2000);
         };
     }
 

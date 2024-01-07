@@ -18,6 +18,10 @@ const GameStop = () => {
     const [stopUsername, setStopUsername] = useState('');
     const [stopped, setStopped] = useState(false);
 
+    const [validateWordCount, setValidateWordCount] = useState(null);
+    const [otherPlayersWords, setOtherPlayersWords] = useState([]);
+    const [otherPlayersPosition, setOtherPlayersPosition] = useState([]);
+
     const location = useLocation();
 
     const id = location.state?.id;
@@ -84,6 +88,24 @@ const GameStop = () => {
         )
     }
 
+    const InvalidateButton = ({ word, position }) => {
+        const [disabled, setDisabled] = useState(false);
+
+        return (
+            <Button
+                className={`fw-bold`}
+                disabled={disabled}
+                onClick={() => {
+                    setDisabled(true)
+                    handleClickWord(position)
+                }}
+            >
+                <i class="bi bi-trash3"></i>
+                Invalidar
+            </Button>
+        )
+    }
+
     const onStart = (started) => {
         if (!started) {
             setLetter('');
@@ -93,7 +115,7 @@ const GameStop = () => {
         }
     }
 
-    const onStop = (un, s) =>{
+    const onStop = (un, s) => {
         setStopUsername(un);
         setStopped(s);
     }
@@ -102,8 +124,16 @@ const GameStop = () => {
         navigate('/');
     }
 
+    const onValidateWordCount = count => {
+        setStopped(false);
+        resetGame();
+    }
 
-    const resetGame = async () => {
+    const handleClickWord = (position) => {
+        stopApi.invalidate(id, {  playerPosition: position, position: validateWordCount, valid: false})
+    }
+
+    const resetGame = async (callback = () => { }) => {
         try {
             if (!id) {
                 navigate('/');
@@ -115,9 +145,18 @@ const GameStop = () => {
                 setLetter(res.data.letter);
                 setWords(res.data.words)
                 setDrawnWords(res.data.drawnWords);
+                setValidateWordCount(res.data.validateWordCount);
+                setOtherPlayersWords(res.data.otherPlayersWords);
+                setOtherPlayersPosition(res.data.otherPlayersPosition);
+                setStopped(false);
             }
         } catch (e) {
-            console.error(e);
+            console.error(e, e?.response?.data?.detail);
+            if (e?.response?.data?.detail === 'Player was not found') {
+                navigate('/')
+            } else {
+                callback();
+            }
         }
 
     }
@@ -153,13 +192,16 @@ const GameStop = () => {
                     onKick();
                     sseForUsers.close();
                     break;
+                case ('STOP_VALIDATE_WORD'):
+                    onValidateWordCount(data.count);
+                    break;
             }
         })
 
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
+            resetGame(() => setTimeout(connect, 3000));
             sseForUsers.close();
-            connect();
         };
     }
 
@@ -192,6 +234,59 @@ const GameStop = () => {
         )
     }
 
+    if (validateWordCount !== null) {
+        return (
+            <>
+                <NavBar />
+                <div className="container" style={{ height: '100%' }}>
+                    <div className="row">
+                        <div className="col text-center">
+                            <h3>Letra: {letter}</h3>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>Tema: {drawnWords[validateWordCount]}</p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>Valide as palavras!</p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Tema</th>
+                                        <th scope="col">Palavra escolhida</th>
+                                        <th scope="col">Valido</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        otherPlayersWords?.map((w, i) => (
+                                            <tr>
+                                                <th scope="row">{i}</th>
+                                                <td>{drawnWords[validateWordCount]}</td>
+                                                <td>{w}</td>
+                                                <td>
+                                                    <InvalidateButton word={w} position={otherPlayersPosition[i]} />
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
+
     return (
         <>
             <NavBar />
@@ -207,7 +302,7 @@ const GameStop = () => {
                 <Lines />
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
-                        <Button className="btn-success" disabled={!letter} onClick={handleClickStop}>STOP!</Button>
+                        <Button className="btn-success" disabled={!letter || !(words?.length === drawnWords?.length) || words?.filter(w => !!w)?.length !== 0} onClick={handleClickStop}>STOP!</Button>
                     </div>
                 </div>
             </div>

@@ -104,7 +104,8 @@ const Login = () => {
     }
 
     const onGameTypeChanged = (type) => {
-        setGameType(type)
+        setGameType(type);
+        fetchHasPassword();
     }
 
 
@@ -134,7 +135,7 @@ const Login = () => {
         sseForUsers.onerror = (error) => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
-            connect();
+            setTimeout(connect, 5000);
         };
         setConnection(sseForUsers);
     }

@@ -5,7 +5,7 @@ import Login from './pages/login/Login';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Game from './pages/bingo/Game';
+import Game from './pages/game/Game';
 import Winner from './pages/winner/Winner';
 import Admin from './pages/admin/Admin';
 import Watch from './pages/watch/Watch';
