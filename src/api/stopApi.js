@@ -8,4 +8,6 @@ export const stopApi = {
     setWord: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/set-word`, payload),
     stop: (playerId) => axiosConfig.post(`/games/stop/users/${playerId}/stop`),
     invalidate: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/validate-word`, payload),
+    start: () => axiosConfig.post(`/games/stop/start`),
+    kickAll: () => axiosConfig.post(`/games/stop/kick-all`)
 }
