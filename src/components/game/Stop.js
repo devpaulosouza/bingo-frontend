@@ -53,11 +53,11 @@ const GameStop = () => {
 
             if (!res.data) {
                 Swal
-                .fire(
-                    {
-                        text: "Você tem que preencher todas as palavras para apertar STOP!"
-                    }
-                )
+                    .fire(
+                        {
+                            text: "Você tem que preencher todas as palavras para apertar STOP!"
+                        }
+                    )
             }
 
         } catch (e) {
@@ -87,7 +87,16 @@ const GameStop = () => {
 
         const handleValueChange = (e) => {
 
-            if (!e.target.value.toUpperCase().startsWith(letter) && e.target.value !== '') {
+            if (!e.target.value.toUpperCase()
+                .replace("Ã", "A")
+                .replace("Õ", "O")
+                .replace("Ç", "C")
+                .replace("Á", "A")
+                .replace("Ó", "O")
+                .replace("Ê", "E")
+                .replace("É", "E")
+                .replace("Ú", "U")
+                .startsWith(letter) && e.target.value !== '') {
                 return;
             }
 
@@ -272,7 +281,7 @@ const GameStop = () => {
 
     useEffect(() => {
         resetGame();
-    },[canStop])
+    }, [canStop])
 
     const connect = () => {
         if (!id) {
