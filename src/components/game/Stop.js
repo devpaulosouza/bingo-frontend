@@ -23,6 +23,8 @@ const GameStop = () => {
     const [otherPlayersWords, setOtherPlayersWords] = useState([]);
     const [otherPlayersPosition, setOtherPlayersPosition] = useState([]);
 
+    const [validatingWords, setValidatingWords] = useState(false);
+
     const [winnerId, setWinnerId] = useState('');
     const [winnerName, setWinnerName] = useState('');
 
@@ -220,10 +222,11 @@ const GameStop = () => {
                 setValidateWordCount(res.data.validateWordCount);
                 setOtherPlayersWords(res.data.otherPlayersWords);
                 setOtherPlayersPosition(res.data.otherPlayersPosition);
-                setStopped(false);
+                setStopped(res.data.stopped);
+                setValidatingWords(res.data.validatingWords);
 
                 if (!canStop) {
-                    setTimeout(() => {setCanStop(true); resetGame() }, 20000)
+                    setTimeout(() => { setCanStop(true); resetGame() }, 20000)
                 }
             }
         } catch (e) {
@@ -270,6 +273,8 @@ const GameStop = () => {
                     break;
                 case ('STOP_VALIDATE_WORD'):
                     onValidateWordCount(data.count);
+                    break;
+                case ('PING'):
                     break;
                 case ('WINNER'):
                     onWinner(data.playerId, data.playerName);
@@ -341,7 +346,7 @@ const GameStop = () => {
                     <div className="row">
                         <div className="col">
                             Deu empate!!!
-                            
+
                             O jogo vai reiniciar em instantes com os melhores jogadores
                         </div>
                     </div>
@@ -421,7 +426,7 @@ const GameStop = () => {
                 <Lines />
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
-                        <Button className="btn-success" disabled={(!canStop)  || (words?.length !== drawnWords?.length)} onClick={handleClickStop}>STOP!</Button>
+                        <Button className="btn-success" disabled={(!canStop) || (words?.filter(w => !!w)?.length !== drawnWords?.length)} onClick={handleClickStop}>STOP!</Button>
                     </div>
                 </div>
             </div>
