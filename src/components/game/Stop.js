@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
 import { stopApi } from "../../api/stopApi";
 import moment from "moment";
+import { bingoApi } from "../../api/bingoApi";
 
 
 
@@ -234,14 +235,6 @@ const GameStop = () => {
                 setValidatingWords(res.data.validatingWords);
 
                 // setCanStop(true);
-
-                if (res.data.canStopAt && moment(res.data.canStopAt).isBefore(moment())) {
-                    setCanStop(true);
-                } 
-                
-                // else {
-                //     setTimeout(() => setCanStop(true), 20000)
-                // }
             }
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -252,6 +245,23 @@ const GameStop = () => {
             }
         }
 
+    }
+
+    const onPing = async () => {
+        try {
+            if (canStop) {
+                return;
+            }
+            
+            const res = await stopApi.get(id);
+
+            if (res.data.canStopAt && moment(res.data.canStopAt).isBefore(moment())) {
+                setCanStop(true);
+            }
+
+        } catch(e) {
+
+        }
     }
 
     const connect = () => {
@@ -289,6 +299,7 @@ const GameStop = () => {
                     onValidateWordCount(data.count);
                     break;
                 case ('PING'):
+                    onPing();
                     break;
                 case ('WINNER'):
                     onWinner(data.playerId, data.playerName);
