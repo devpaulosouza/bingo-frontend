@@ -6,6 +6,7 @@ import { v4 } from "uuid";
 import { stopApi } from "../../api/stopApi";
 import moment from "moment";
 import { bingoApi } from "../../api/bingoApi";
+import Swal from "sweetalert2";
 
 
 
@@ -50,6 +51,15 @@ const GameStop = () => {
         try {
             const res = await stopApi.stop(id);
 
+            if (!res.data) {
+                Swal
+                .fire(
+                    {
+                        text: "Você tem que preencher todas as palavras para apertar STOP!"
+                    }
+                )
+            }
+
         } catch (e) {
             console.error(e);
         }
@@ -76,6 +86,11 @@ const GameStop = () => {
         const [v, setV] = useState(value || '')
 
         const handleValueChange = (e) => {
+
+            if (!e.target.value.startsWith(letter)) {
+                return;
+            }
+
             setV(e.target.value);
             debounce(async () => {
                 try {
