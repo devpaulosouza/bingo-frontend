@@ -87,7 +87,7 @@ const GameStop = () => {
 
         const handleValueChange = (e) => {
 
-            if (!e.target.value.toUpperCase().startsWith(letter)) {
+            if (!e.target.value.toUpperCase().startsWith(letter) && e.target.value !== '') {
                 return;
             }
 
