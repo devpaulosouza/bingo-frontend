@@ -4,6 +4,7 @@ import NavBar from "../NavBar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { v4 } from "uuid";
 import { stopApi } from "../../api/stopApi";
+import moment from "moment";
 
 
 
@@ -21,6 +22,16 @@ const GameStop = () => {
     const [validateWordCount, setValidateWordCount] = useState(null);
     const [otherPlayersWords, setOtherPlayersWords] = useState([]);
     const [otherPlayersPosition, setOtherPlayersPosition] = useState([]);
+
+    const [winnerId, setWinnerId] = useState('');
+    const [winnerName, setWinnerName] = useState('');
+
+    const [canStopAt, setCanStopAt] = useState(moment())
+    const [canStop, setCanStop] = useState(false)
+
+    const [draw, setDraw] = useState(false);
+
+    const [games, setGames] = useState([]);
 
     const location = useLocation();
 
@@ -106,7 +117,49 @@ const GameStop = () => {
         )
     }
 
+    const TableWinners = () => {
+        return (
+            <div className="row">
+                <div className="col">
+                    <div className="container">
+                        <div className="table-responsive">
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">@</th>
+                                        {drawnWords?.map(w => <th scope="col">{w}</th>)}
+                                        <th scope="col">Pontos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        games
+                                            ?.sort((g1, g2) => g2.score - g1.score)
+                                            ?.map((g, i) => {
+                                                return (
+                                                    <tr>
+                                                        <th scope="row">{i}</th>
+                                                        <td>{g?.player?.name}</td>
+                                                        <td>{g?.player?.username}</td>
+                                                        {g?.words?.map(w => <td>{w}</td>)}
+                                                        <td>{g?.score}</td>
+                                                    </tr>
+                                                )
+                                            })
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
     const onStart = (started) => {
+        setDraw(false);
         if (!started) {
             setLetter('');
         }
@@ -129,9 +182,28 @@ const GameStop = () => {
         resetGame();
     }
 
-    const handleClickWord = (position) => {
-        stopApi.invalidate(id, {  playerPosition: position, position: validateWordCount, valid: false})
+    const onWinner = (playerId, playerName) => {
+        setWinnerId(playerId);
+        setWinnerName(playerName);
+
+        fetchGame();
     }
+
+    const onDraw = () => {
+        setDraw(true);
+    }
+
+    const fetchGame = async () => {
+        const res = await stopApi.getAll();
+
+        setGames(res.data.games)
+    }
+
+    const handleClickWord = (position) => {
+        stopApi.invalidate(id, { playerPosition: position, position: validateWordCount, valid: false })
+    }
+
+    console.log(canStopAt)
 
     const resetGame = async (callback = () => { }) => {
         try {
@@ -149,6 +221,10 @@ const GameStop = () => {
                 setOtherPlayersWords(res.data.otherPlayersWords);
                 setOtherPlayersPosition(res.data.otherPlayersPosition);
                 setStopped(false);
+
+                if (!canStop) {
+                    setTimeout(() => {setCanStop(true); resetGame() }, 20000)
+                }
             }
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -195,6 +271,12 @@ const GameStop = () => {
                 case ('STOP_VALIDATE_WORD'):
                     onValidateWordCount(data.count);
                     break;
+                case ('WINNER'):
+                    onWinner(data.playerId, data.playerName);
+                    break;
+                case ('STOP_RESTART'):
+                    onDraw();
+                    break;
             }
         })
 
@@ -208,6 +290,7 @@ const GameStop = () => {
     useEffect(() => {
         connect();
         resetGame();
+        fetchGame();
     }, []);
 
 
@@ -233,6 +316,42 @@ const GameStop = () => {
             </>
         )
     }
+
+    console.log(games)
+    if (winnerId) {
+        return (
+            <>
+                <NavBar />
+                <div style={{ height: '100%' }}>
+                    <div className="row">
+                        <div className="col">
+                            {winnerId === id ? `Parabéns! Você ganhou` : `O jogador ${winnerName} ganhou!`}
+                        </div>
+                    </div>
+                    <TableWinners />
+                </div>
+            </>
+        )
+    }
+    if (draw) {
+        return (
+            <>
+                <NavBar />
+                <div style={{ height: '100%' }}>
+                    <div className="row">
+                        <div className="col">
+                            Deu empate!!!
+                            
+                            O jogo vai reiniciar em instantes com os melhores jogadores
+                        </div>
+                    </div>
+                    <TableWinners />
+                </div>
+            </>
+        )
+    }
+
+    console.log(words.length, drawnWords.length)
 
     if (validateWordCount !== null) {
         return (
@@ -302,7 +421,7 @@ const GameStop = () => {
                 <Lines />
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
-                        <Button className="btn-success" disabled={!letter || !(words?.length === drawnWords?.length) || words?.filter(w => !!w)?.length !== 0} onClick={handleClickStop}>STOP!</Button>
+                        <Button className="btn-success" disabled={(!canStop)  || (words?.length !== drawnWords?.length)} onClick={handleClickStop}>STOP!</Button>
                     </div>
                 </div>
             </div>
