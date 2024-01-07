@@ -32,6 +32,8 @@ const GameStop = () => {
     const [canStopAt, setCanStopAt] = useState(moment())
     const [canStop, setCanStop] = useState(false)
 
+    const [refresh, setRefresh] = useState(false);
+
     const [draw, setDraw] = useState(false);
 
     const [games, setGames] = useState([]);
@@ -247,17 +249,24 @@ const GameStop = () => {
 
     }
 
-    const onPing = async () => {
-        try {
-            if (canStop) {
-                return;
-            }
+    useEffect(() => {
 
-            setCanStop(true);
-
-        } catch(e) {
-
+        console.log(canStop, letter)
+        
+        if (!refresh) {
+            return;
         }
+
+        if (canStop || !letter) {
+            return;
+        }
+
+        setCanStop(true);
+        setRefresh(false);
+    }, [refresh])
+
+    const onPing = async () => {
+        setRefresh(true);
     }
 
     const connect = () => {
