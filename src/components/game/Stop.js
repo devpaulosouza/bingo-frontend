@@ -7,6 +7,7 @@ import { stopApi } from "../../api/stopApi";
 import moment from "moment";
 import { bingoApi } from "../../api/bingoApi";
 import Swal from "sweetalert2";
+import StopWords from "./stop/StopWords";
 
 
 
@@ -18,19 +19,21 @@ const GameStop = () => {
     const [words, setWords] = useState([]);
     const [drawnWords, setDrawnWords] = useState(['Arvore']);
 
+    const [started, setStarted] = useState(false);
+
     const [stopUsername, setStopUsername] = useState('');
     const [stopped, setStopped] = useState(false);
 
     const [validateWordCount, setValidateWordCount] = useState(null);
     const [otherPlayersWords, setOtherPlayersWords] = useState([]);
     const [otherPlayersPosition, setOtherPlayersPosition] = useState([]);
+    const [scores, setScores] = useState([]);
 
     const [validatingWords, setValidatingWords] = useState(false);
 
     const [winnerId, setWinnerId] = useState('');
     const [winnerName, setWinnerName] = useState('');
 
-    const [canStopAt, setCanStopAt] = useState(moment())
     const [canStop, setCanStop] = useState(false)
 
     const [refresh, setRefresh] = useState(false);
@@ -40,6 +43,8 @@ const GameStop = () => {
     const [games, setGames] = useState([]);
 
     const [connection, setConnection] = useState(null);
+
+    const [clear, setClear] = useState(false);
 
     const location = useLocation();
 
@@ -63,72 +68,6 @@ const GameStop = () => {
         } catch (e) {
             console.error(e);
         }
-    }
-
-    const debounce = (mainFunction, delay) => {
-        // Declare a variable called 'timer' to store the timer ID
-        let timer;
-
-        // Return an anonymous function that takes in any number of arguments
-        return function (...args) {
-            // Clear the previous timer to prevent the execution of 'mainFunction'
-            clearTimeout(timer);
-
-            // Set a new timer that will execute 'mainFunction' after the specified delay
-            timer = setTimeout(() => {
-                mainFunction(...args);
-            }, delay);
-        };
-    };
-
-    const Line = ({ name, value, idx, onChange }) => {
-
-        const [v, setV] = useState(value || '')
-
-        const handleValueChange = (e) => {
-
-            if (!e.target.value.toUpperCase()
-                .replace("Ã", "A")
-                .replace("Õ", "O")
-                .replace("Ç", "C")
-                .replace("Á", "A")
-                .replace("Ó", "O")
-                .replace("Ê", "E")
-                .replace("É", "E")
-                .replace("Ú", "U")
-                .startsWith(letter) && e.target.value !== '') {
-                return;
-            }
-
-            setV(e.target.value);
-            debounce(async () => {
-                try {
-                    await stopApi.setWord(id, { playerId: id, position: idx, word: e.target.value })
-                } catch (e) {
-                    console.error(e);
-                }
-            })();
-        }
-
-
-        return (
-            <div className="mb-3">
-                {/* <label htmlFor="name" className="form-label">Nome</label> */}
-                <input type="text" id="name" className="form-control" placeholder={name} value={v} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
-            </div>
-        )
-    }
-
-    const renderLines = () => {
-        return (
-            <div className="container-fluid login-container pt-5 mt-4">
-                <form>
-                    <fieldset>
-                        {drawnWords?.map((i, idx) => <Line name={i} value={words[idx]} idx={idx} key={JSON.stringify(i)} />)}
-                    </fieldset>
-                </form>
-            </div>
-        )
     }
 
     const InvalidateButton = ({ word, position }) => {
@@ -175,7 +114,7 @@ const GameStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td>{g?.player?.name}</td>
                                                         <td>{g?.player?.username}</td>
-                                                        {g?.words?.map(w => <td>{w}</td>)}
+                                                        {g?.words?.map((w,i) => <td>{w} - {g?.scores[i]} </td>)}
                                                         <td>{g?.score}</td>
                                                     </tr>
                                                 )
@@ -193,6 +132,10 @@ const GameStop = () => {
     const onStart = (started) => {
         setDraw(false);
 
+        if (!canStop) {
+            setTimeout(() => {setCanStop(true); console.log('can stop tru')}, 30000);
+        }
+
         if (!letter) {
             resetGame();
         }
@@ -208,6 +151,7 @@ const GameStop = () => {
     const onStop = (un, s) => {
         setStopUsername(un);
         setStopped(s);
+        fetchGame();
     }
 
     const onKick = () => {
@@ -229,7 +173,8 @@ const GameStop = () => {
 
     const onDraw = () => {
         setDraw(true);
-        resetGame();
+        setCanStop(false);
+        setClear(true);
         setLetter('');
     }
 
@@ -252,11 +197,6 @@ const GameStop = () => {
             const res = await stopApi.get(id);
 
             if (res.status === 200) {
-
-                if (res.data.words?.filter(w => !!w)?.length !== 0) {
-                    setWords(res.data.words);
-                }
-
                 setLetter(res.data.letter);
                 setDrawnWords(res.data.drawnWords);
                 setValidateWordCount(res.data.validateWordCount);
@@ -264,8 +204,10 @@ const GameStop = () => {
                 setOtherPlayersPosition(res.data.otherPlayersPosition);
                 setStopped(res.data.stopped);
                 setValidatingWords(res.data.validatingWords);
+                setScores(res.data.scores);
 
-                // setCanStop(true);
+                setCanStop(res.data.canStop);
+                setStarted(!!res.data.letter);
             }
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -277,17 +219,7 @@ const GameStop = () => {
     }
 
     const onPing = async () => {
-        console.log('pingou')
-        if (canStop) {
-            return;
-        }
-
-        setCanStop(true);
     }
-
-    useEffect(() => {
-        resetGame();
-    }, [canStop])
 
     const connect = () => {
         if (!id) {
@@ -349,8 +281,7 @@ const GameStop = () => {
         fetchGame();
     }, []);
 
-
-    if (!letter) {
+    if (!started) {
         return (
             <>
                 <NavBar />
@@ -471,7 +402,7 @@ const GameStop = () => {
                         </div>
                     </div>
                 </div>
-                {renderLines()}
+                <StopWords clear={clear} drawnWords={drawnWords} words={words} setClear={setClear} letter={letter} id={id}/>
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
                         <Button className="btn-success" disabled={!canStop} onClick={handleClickStop}>STOP!</Button>

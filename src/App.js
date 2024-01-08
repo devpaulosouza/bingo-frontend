@@ -9,6 +9,7 @@ import Game from './pages/game/Game';
 import Winner from './pages/winner/Winner';
 import Admin from './pages/admin/Admin';
 import Watch from './pages/watch/Watch';
+import Test from './pages/test/Test';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: '/watch',
     element: <Watch />
+  }, 
+  {
+    path: '/test',
+    element: <Test />
   }
 ])
 
