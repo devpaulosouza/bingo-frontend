@@ -193,6 +193,10 @@ const GameStop = () => {
     const onStart = (started) => {
         setDraw(false);
 
+        if (!letter) {
+            resetGame();
+        }
+
         if (!started) {
             setLetter('');
         }
@@ -225,6 +229,8 @@ const GameStop = () => {
 
     const onDraw = () => {
         setDraw(true);
+        resetGame();
+        setLetter('');
     }
 
     const fetchGame = async () => {
