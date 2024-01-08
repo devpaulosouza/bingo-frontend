@@ -87,7 +87,7 @@ const GameStop = () => {
             </Button>
         )
     }
-
+    // - {g?.scores && g?.scores[i]} 
     const TableWinners = () => {
         return (
             <div className="row">
@@ -114,7 +114,7 @@ const GameStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td>{g?.player?.name}</td>
                                                         <td>{g?.player?.username}</td>
-                                                        {g?.words?.map((w,i) => <td>{w} - {g?.scores && g?.scores[i]} </td>)}
+                                                        {g?.words?.map((w,i) => <td>{w} </td>)} 
                                                         <td>{g?.score}</td>
                                                     </tr>
                                                 )
