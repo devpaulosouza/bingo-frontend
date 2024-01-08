@@ -59,7 +59,7 @@ const renderAllDrawnNumbers = (drawnNumbers) => {
 
         elements.push(
             <div className="row">
-                {numbers?.map((n, i) => <><div className="col text-center" style={{maxWidth: 50}}><h4>{renderNumber(n)}</h4></div>{i%10 === 0 && <br />}</>)}
+                {numbers?.reverse()?.map((n, i) => <><div className="col text-center" style={{maxWidth: 50}}><h4>{renderNumber(n)}</h4></div>{i%10 === 0 && <br />}</>)}
             </div>
         )
 
