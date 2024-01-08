@@ -114,7 +114,7 @@ const GameStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td>{g?.player?.name}</td>
                                                         <td>{g?.player?.username}</td>
-                                                        {g?.words?.map((w,i) => <td>{w} - {g?.scores[i]} </td>)}
+                                                        {g?.words?.map((w,i) => <td>{w} - {g?.scores && g?.scores[i]} </td>)}
                                                         <td>{g?.score}</td>
                                                     </tr>
                                                 )
@@ -162,13 +162,12 @@ const GameStop = () => {
         setStopped(false);
         setValidatingWords(false)
         resetGame();
+        fetchGame();
     }
 
     const onWinner = (playerId, playerName) => {
         setWinnerId(playerId);
         setWinnerName(playerName);
-
-        fetchGame();
     }
 
     const onDraw = () => {
