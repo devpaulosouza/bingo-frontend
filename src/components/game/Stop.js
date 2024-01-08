@@ -29,6 +29,8 @@ const GameStop = () => {
     const [otherPlayersPosition, setOtherPlayersPosition] = useState([]);
     const [scores, setScores] = useState([]);
 
+    const [winners, setWinners] = useState([]);
+
     const [validatingWords, setValidatingWords] = useState(false);
 
     const [winnerId, setWinnerId] = useState('');
@@ -168,6 +170,11 @@ const GameStop = () => {
     const onWinner = (playerId, playerName) => {
         setWinnerId(playerId);
         setWinnerName(playerName);
+
+        if (playerId !== id) {
+            setTimeout(() => navigate('/'), 10000);
+        }
+
     }
 
     const onDraw = () => {
@@ -180,7 +187,8 @@ const GameStop = () => {
     const fetchGame = async () => {
         const res = await stopApi.getAll();
 
-        setGames(res.data.games)
+        setGames(res.data.games);
+        setWinners(res.data.winners);
     }
 
     const handleClickWord = (position) => {
