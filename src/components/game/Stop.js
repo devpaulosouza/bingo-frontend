@@ -137,16 +137,8 @@ const GameStop = () => {
     const onStart = (started) => {
         setDraw(false);
 
-        if (!letter) {
-            resetGame();
-        }
-
-        if (!started) {
-            setLetter('');
-        }
-        else {
-            resetGame();
-        }
+        resetGame();
+        fetchGame();
     }
 
     const onStop = (un, s) => {
@@ -170,11 +162,6 @@ const GameStop = () => {
         setWinnerId(playerId);
         setWinnerName(playerName);
         fetchGame();
-
-        if (playerId !== id) {
-            setTimeout(() => navigate('/'), 10000);
-        }
-
     }
 
     const onDraw = () => {
