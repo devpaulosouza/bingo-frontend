@@ -81,15 +81,14 @@ const GameStop = () => {
 
         return (
             <Button
-                className={`fw-bold`}
+                className={`fw-bold btn-danger`}
                 disabled={disabled}
                 onClick={() => {
                     setDisabled(true)
                     handleClickWord(position)
                 }}
             >
-                <i class="bi bi-trash3"></i>
-                Invalidar
+                Invalido
             </Button>
         )
     }
@@ -103,11 +102,11 @@ const GameStop = () => {
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th className="text-center"  scope="col">#</th>
-                                        <th className="text-center"  scope="col">Nome</th>
-                                        <th className="text-center"  scope="col">@</th>
-                                        {drawnWords?.map(w => <th className="text-center"  scope="col">{w}</th>)}
-                                        <th className="text-center"  scope="col">Pontos</th>
+                                        <th className="text-center" scope="col">#</th>
+                                        <th className="text-center" scope="col">Nome</th>
+                                        <th className="text-center" scope="col">@</th>
+                                        {drawnWords?.map(w => <th className="text-center" scope="col">{w}</th>)}
+                                        <th className="text-center" scope="col">Pontos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -120,7 +119,7 @@ const GameStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td className="text-center" >{g?.player?.name}</td>
                                                         <td className="text-center" >{g?.player?.username}</td>
-                                                        {g?.words?.map((w, i) => <td className="text-center" style={{color: g?.scores && g?.scores[i] ? 'black': 'red',}}>{g?.scores && g?.scores[i] ? w + " (" + g.scores[i] + ")" : w } </td>)}
+                                                        {g?.words?.map((w, i) => <td className="text-center" style={{ color: g?.scores && g?.scores[i] ? 'black' : 'red', }}>{g?.scores && g?.scores[i] ? w + " (" + g.scores[i] + ")" : w} </td>)}
                                                         <td className="text-center" >{g?.score}</td>
                                                     </tr>
                                                 )
@@ -376,8 +375,8 @@ const GameStop = () => {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col">
-                            <p>Valide as palavras!</p>
+                        <div className="col text-center">
+                            <h3>Invalide caso a palavra não se encaixe no tema, ou se estiver escrita de forma errada</h3>
                         </div>
                     </div>
                     <div className="row">
@@ -388,21 +387,27 @@ const GameStop = () => {
                                         <th scope="col">#</th>
                                         <th scope="col">Tema</th>
                                         <th scope="col">Palavra escolhida</th>
-                                        <th scope="col">Valido</th>
+                                        <th scope="col">Validação</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {
-                                        otherPlayersWords?.map((w, i) => (
-                                            <tr>
-                                                <th scope="row">{i}</th>
-                                                <td>{drawnWords[validateWordCount]}</td>
-                                                <td>{w}</td>
-                                                <td>
-                                                    <InvalidateButton word={w} position={otherPlayersPosition[i]} />
-                                                </td>
-                                            </tr>
-                                        ))
+                                        otherPlayersWords?.map((w, i) => {
+
+                                            if (!!w) {
+                                                return (
+                                                    <tr>
+                                                        <th scope="row">{i}</th>
+                                                        <td>{drawnWords[validateWordCount]}</td>
+                                                        <td>{w}</td>
+                                                        <td>
+                                                            <InvalidateButton word={w} position={otherPlayersPosition[i]} />
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            }
+                                        })
+
                                     }
                                 </tbody>
                             </table>
