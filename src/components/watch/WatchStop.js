@@ -17,14 +17,6 @@ const WatchStop = () => {
     const [winners, setWinners] = useState([]);
     const [validateWordCount, setValidateWordCount] = useState(null);
 
-    if (true) {
-        return (
-            <>
-            <NavBar />
-            Desativado temporariamente até eu descobrir como corrige os bugs de conexão
-            </>
-        )
-    }
 
     const fetchGame = async () => {
         try {
@@ -140,6 +132,15 @@ const WatchStop = () => {
                     </>
                 )
             )
+        )
+    }
+
+    if (true) {
+        return (
+            <>
+            <NavBar />
+            Desativado temporariamente até eu descobrir como corrige os bugs de conexão
+            </>
         )
     }
 
