@@ -27,6 +27,8 @@ const GameStop = () => {
     const [validateWordCount, setValidateWordCount] = useState(null);
     const [otherPlayersWords, setOtherPlayersWords] = useState([]);
     const [otherPlayersPosition, setOtherPlayersPosition] = useState([]);
+
+    const [tries, setTries] = useState(0);
     const [scores, setScores] = useState([]);
 
     const [winners, setWinners] = useState([]);
@@ -116,7 +118,7 @@ const GameStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td>{g?.player?.name}</td>
                                                         <td>{g?.player?.username}</td>
-                                                        {g?.words?.map((w,i) => <td>{w} </td>)} 
+                                                        {g?.words?.map((w, i) => <td>{w} </td>)}
                                                         <td>{g?.score}</td>
                                                     </tr>
                                                 )
@@ -133,10 +135,6 @@ const GameStop = () => {
 
     const onStart = (started) => {
         setDraw(false);
-
-        if (!canStop) {
-            setTimeout(() => {setCanStop(true); console.log('can stop tru')}, 30000);
-        }
 
         if (!letter) {
             resetGame();
@@ -229,6 +227,12 @@ const GameStop = () => {
     }
 
     const connect = () => {
+
+        if (tries > 10) {
+            navigate('/');
+            return;
+        }
+
         if (!id) {
             navigate('/');
             return;
@@ -256,8 +260,8 @@ const GameStop = () => {
                     onStop(data.playerName, data.stopped);
                     break;
                 case ("KICK"):
-                    onKick();
                     sseForUsers.close();
+                    onKick();
                     break;
                 case ('STOP_VALIDATE_WORD'):
                     onValidateWordCount(data.count);
@@ -267,6 +271,9 @@ const GameStop = () => {
                     break;
                 case ('WINNER'):
                     onWinner(data.playerId, data.playerName);
+                    break;
+                case ('CAN_STOP'):
+                    setCanStop(true);
                     break;
                 case ('STOP_RESTART'):
                     onDraw();
@@ -278,6 +285,7 @@ const GameStop = () => {
             console.log("SSE For Users error", error);
             setTimeout(connect, 3000)
             sseForUsers.close();
+            setTries(tries + 1);
         };
         // setConnection(sseForUsers);
     }
@@ -409,7 +417,7 @@ const GameStop = () => {
                         </div>
                     </div>
                 </div>
-                <StopWords clear={clear} drawnWords={drawnWords} words={words} setClear={setClear} letter={letter} id={id}/>
+                <StopWords clear={clear} drawnWords={drawnWords} words={words} setClear={setClear} letter={letter} id={id} />
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
                         <Button className="btn-success" disabled={!canStop} onClick={handleClickStop}>STOP!</Button>

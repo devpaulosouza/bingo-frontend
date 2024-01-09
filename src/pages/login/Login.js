@@ -27,7 +27,9 @@ const Login = () => {
 
     const [gameType, setGameType] = useState('BINGO');
 
-    const[connection, setConnection] = useState(null);
+    const [connection, setConnection] = useState(null);
+
+    const [tries, setTries] = useState(0);
 
     const navigate = useNavigate();
 
@@ -98,7 +100,7 @@ const Login = () => {
                 setGameType(configRes.data.gameType);
             }
 
-        } catch(e) {
+        } catch (e) {
             console.error(e);
         }
     }
@@ -110,6 +112,10 @@ const Login = () => {
 
 
     const connect = () => {
+        if (tries >= 5) {
+            return;
+        }
+
         const sseForUsers = new EventSource(
             `${SOCKET_URL}/watch`,
             {
@@ -120,6 +126,7 @@ const Login = () => {
 
         sseForUsers.onopen = (e) => {
             console.log("SSE 3 Connected !");
+            setTries(0);
         };
 
         sseForUsers.addEventListener('message', (event) => {
@@ -136,6 +143,7 @@ const Login = () => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
             setTimeout(connect, 5000);
+            setTries(tries + 1);
         };
         setConnection(sseForUsers);
     }
@@ -147,42 +155,42 @@ const Login = () => {
 
     return (
         <>
-        <NavBar />
-        <div className="container-fluid login-container pt-5 mt-4">
-            <form>
-                <fieldset>
-                    <legend>Informe seus dados para jogar</legend>
-                    <p>Jogo: {gameType === 'BINGO' ? 'Bingo' : 'Stop'}</p>
-                    <div className="mb-3">
-                        <label htmlFor="name" className="form-label">Nome</label>
-                        <input type="text" id="name" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="username" className="form-label">Usuário do X (Twitter)</label>
-                        <input type="text" id="username" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} spellCheck="false" autoCapitalize="none" autoCorrect="off"/>
-                    </div>
-                    {
-                        hasPassword && (
-                            <div className="mb-3">
-                                <label htmlFor="password" className="form-label">Senha:</label>
-                                <input type="text" id="password" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} spellCheck="false" autoCapitalize="none" autoCorrect="off" />
-                            </div>
-                        )
-                    }
-                    {
-                        !allowed && (
-                            <div className="mb-3">
-                                <div className="alert alert-danger" role="alert">
-                                    {message}
+            <NavBar />
+            <div className="container-fluid login-container pt-5 mt-4">
+                <form>
+                    <fieldset>
+                        <legend>Informe seus dados para jogar</legend>
+                        <p>Jogo: {gameType === 'BINGO' ? 'Bingo' : 'Stop'}</p>
+                        <div className="mb-3">
+                            <label htmlFor="name" className="form-label">Nome</label>
+                            <input type="text" id="name" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="username" className="form-label">Usuário do X (Twitter)</label>
+                            <input type="text" id="username" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} spellCheck="false" autoCapitalize="none" autoCorrect="off" />
+                        </div>
+                        {
+                            hasPassword && (
+                                <div className="mb-3">
+                                    <label htmlFor="password" className="form-label">Senha:</label>
+                                    <input type="text" id="password" className="form-control" placeholder="Senha" value={password} onChange={handlePasswordChange} spellCheck="false" autoCapitalize="none" autoCorrect="off" />
                                 </div>
-                            </div>
-                        )
-                    }
-                    <button type="button" className="btn btn-primary" onClick={handleSubmit} style={{marginRight: 8}}>Jogar</button>
-                    <button type="button" className="btn btn-secondary" onClick={handleWatch}>Assistir</button>
-                </fieldset>
-            </form>
-        </div>
+                            )
+                        }
+                        {
+                            !allowed && (
+                                <div className="mb-3">
+                                    <div className="alert alert-danger" role="alert">
+                                        {message}
+                                    </div>
+                                </div>
+                            )
+                        }
+                        <button type="button" className="btn btn-primary" onClick={handleSubmit} style={{ marginRight: 8 }}>Jogar</button>
+                        <button type="button" className="btn btn-secondary" onClick={handleWatch}>Assistir</button>
+                    </fieldset>
+                </form>
+            </div>
         </>
     );
 }
