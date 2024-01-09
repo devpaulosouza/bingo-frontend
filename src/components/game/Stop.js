@@ -427,7 +427,7 @@ const GameStop = () => {
                 <StopWords clear={clear} drawnWords={drawnWords} words={words} setClear={setClear} letter={letter} id={id} />
                 <div className="row">
                     <div className="col d-flex justify-content-center mt-3">
-                        <Button className="btn-success" disabled={!canStop} onClick={handleClickStop}>STOP!</Button>
+                        <Button className="btn-danger" disabled={!canStop} onClick={handleClickStop}>STOP!</Button>
                     </div>
                 </div>
             </div>
