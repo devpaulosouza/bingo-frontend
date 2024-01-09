@@ -137,6 +137,8 @@ const GameStop = () => {
     const onStart = (started) => {
         setDraw(false);
 
+        setStarted(started);
+
         resetGame();
         fetchGame();
     }
