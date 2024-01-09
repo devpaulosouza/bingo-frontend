@@ -15,7 +15,7 @@ const Admin = () => {
 
     useEffect(() => {
         fetchConfig();
-    })
+    }, []);
 
     if (gameType === 'STOP') {
         return <AdminStop />
