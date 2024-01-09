@@ -23,8 +23,8 @@ body {
 }
 
 
-.btn-danger:disabled,
-.btn-danger[disabled]{
+.btn-danger-stop:disabled,
+.btn-danger-stop[disabled]{
   background-color: #333;
   color: #c0c0c0;
 }

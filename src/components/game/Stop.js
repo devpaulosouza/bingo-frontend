@@ -81,7 +81,7 @@ const GameStop = () => {
 
         return (
             <Button
-                className={`fw-bold btn-danger`}
+                className={`fw-bold btn-danger btn-danger-stop`}
                 disabled={disabled}
                 onClick={() => {
                     setDisabled(true)
