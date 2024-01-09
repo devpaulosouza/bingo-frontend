@@ -12,7 +12,6 @@ const id = v4();
 
 const WatchStop = () => {
 
-    const [connected, setConnected] = useState(false);
     const [drawnWords, setDrawnWords] = useState([]);
     const [games, setGames] = useState([]);
     const [winners, setWinners] = useState([]);
@@ -31,48 +30,46 @@ const WatchStop = () => {
         }
     }
 
+    const connect = () => {
+        const sseForUsers = new EventSource(
+            `${SOCKET_URL}/connect/players/${id}?isAdmin=true`,
+            {
+                withCredentials: false,
+            }
+        );
+
+
+        sseForUsers.onopen = (e) => {
+            console.log("SSE 3 Connected !");
+        };
+
+        sseForUsers.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+
+            switch (data?.type) {
+                default:
+                    fetchGame();
+                    break;
+            }
+        })
+
+        sseForUsers.onerror = (error) => {
+            console.log("SSE For Users error", error);
+            setTimeout(connect, 3000)
+            sseForUsers.close();
+        };
+    }
+
+
     useEffect(
         () => {
             fetchGame()
+            connect()
         },
         []
     )
 
-    useEffect(
-        () => {
-            if (!connected) {
-                const sseForUsers = new EventSource(
-                    `${SOCKET_URL}/connect/players/${id}?isAdmin=true`,
-                    {
-                        withCredentials: false,
-                    }
-                );
-
-
-                sseForUsers.onopen = (e) => {
-                    console.log("SSE 3 Connected !");
-                };
-
-                sseForUsers.addEventListener('message', (event) => {
-                    const data = JSON.parse(event.data);
-
-                    switch (data?.type) {
-                        default:
-                            fetchGame();
-                    }
-                })
-
-                sseForUsers.onerror = (error) => {
-                    console.log("SSE For Users error", error);
-                    sseForUsers.close();
-                };
-                setConnected(true);
-            }
-        },
-        [connected]
-    );
-
-    console.log(validateWordCount)
+    // console.log(validateWordCount)
 
     const renderBoards = () => {
 
