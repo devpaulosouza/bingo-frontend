@@ -88,7 +88,14 @@ const Login = () => {
 
     const fetchHasPassword = async () => {
         try {
-            const res = await bingoApi.hasPassword();
+            let res;
+
+            if (gameType === 'BINGO') {
+                res = await bingoApi.hasPassword();
+            }
+            else if (gameType === 'STOP') {
+                res = await stopApi.hasPassword();
+            }
 
             if (res.status == 200) {
                 setHasPassword(res.data.hasPassword);
@@ -107,8 +114,11 @@ const Login = () => {
 
     const onGameTypeChanged = (type) => {
         setGameType(type);
-        fetchHasPassword();
     }
+
+    useEffect(() => {
+        fetchHasPassword();
+    }, [gameType])
 
 
     const connect = () => {

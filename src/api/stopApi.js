@@ -9,5 +9,6 @@ export const stopApi = {
     stop: (playerId) => axiosConfig.post(`/games/stop/users/${playerId}/stop`),
     invalidate: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/validate-word`, payload),
     start: () => axiosConfig.post(`/games/stop/start`),
-    kickAll: () => axiosConfig.post(`/games/stop/kick-all`)
+    kickAll: () => axiosConfig.post(`/games/stop/kick-all`),
+    hasPassword: () => axiosConfig.get(`/games/stop/has-password`),
 }
