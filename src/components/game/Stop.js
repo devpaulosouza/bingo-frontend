@@ -143,6 +143,11 @@ const GameStop = () => {
         fetchGame();
     }
 
+    useEffect(() => {
+        resetGame();
+        fetchGame();
+    }, [started]);
+
     const onStop = (un, s) => {
         setStopUsername(un);
         setStopped(s);
