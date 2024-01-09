@@ -179,19 +179,28 @@ const GameStop = () => {
     }
 
     const fetchGame = async () => {
-        const res = await stopApi.getAll();
+        try {
 
-        setGames(res.data.games);
-        setWinners(res.data.winners);
-        setShowingResults(res.data.showingResults);
-        if (res?.data?.winners?.length) {
-            setWinnerName(res?.data.winners[0].name);
-            setWinnerId(res?.data.winners[0].id);
+            const res = await stopApi.getAll();
+
+            setGames(res.data.games);
+            setWinners(res.data.winners);
+            setShowingResults(res.data.showingResults);
+            if (res?.data?.winners?.length) {
+                setWinnerName(res?.data.winners[0].name);
+                setWinnerId(res?.data.winners[0].id);
+            }
+        } catch(e) {
+            console.error(e);
         }
     }
 
     const handleClickWord = (position) => {
-        stopApi.invalidate(id, { playerPosition: position, position: validateWordCount, valid: false })
+        try {
+            stopApi.invalidate(id, { playerPosition: position, position: validateWordCount, valid: false })
+        } catch(e) {
+            console.error(e);
+        }
     }
 
     const resetGame = async (callback = () => { }) => {
