@@ -191,6 +191,10 @@ const GameStop = () => {
         setGames(res.data.games);
         setWinners(res.data.winners);
         setShowingResults(res.data.showingResults);
+        if (res?.data?.winners?.length) {
+            setWinnerName(res?.data.winners[0].name);
+            setWinnerId(res?.data.winners[0].id);
+        }
     }
 
     const handleClickWord = (position) => {
