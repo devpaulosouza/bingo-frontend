@@ -28,6 +28,7 @@ const AdminStop = () => {
 
             setGames(res.data.games);
             setDrawnWords(res.data.drawnWords);
+            setWinners([...res.data.winners, ...winners])
         } catch(e) {
             console.error(e);
         }
@@ -92,11 +93,11 @@ const AdminStop = () => {
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nome</th>
-                                        <th scope="col">@</th>
-                                        {drawnWords?.map(w => <th scope="col">{w}</th>)}
-                                        <th scope="col">Pontos</th>
+                                        <th className="text-center"  scope="col">#</th>
+                                        <th className="text-center"  scope="col">Nome</th>
+                                        <th className="text-center"  scope="col">@</th>
+                                        {drawnWords?.map(w => <th className="text-center"  scope="col">{w}</th>)}
+                                        <th className="text-center"  scope="col">Pontos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -107,10 +108,10 @@ const AdminStop = () => {
                                                 return (
                                                     <tr>
                                                         <th scope="row">{i}</th>
-                                                        <td>{g?.player?.name}</td>
-                                                        <td>{g?.player?.username}</td>
-                                                        {g?.words?.map(w => <td>{w}</td>)}
-                                                        <td>{g?.score}</td>
+                                                        <td className="text-center" >{g?.player?.name}</td>
+                                                        <td className="text-center" >{g?.player?.username}</td>
+                                                        {g?.words?.map((w, i) => <td className="text-center" style={{color: g?.scores && g?.scores[i] ? 'black': 'red',}}>{g?.scores && g?.scores[i] ? w + " (" + g.scores[i] + ")" : w } </td>)}
+                                                        <td className="text-center" >{g?.score}</td>
                                                     </tr>
                                                 )
                                             })
@@ -136,7 +137,7 @@ const AdminStop = () => {
                         </div>
                         <div className="row">
                             <div className="col">
-                                @: {winner.username}
+                                @{winner.username}
                             </div>
                         </div>
                     </>

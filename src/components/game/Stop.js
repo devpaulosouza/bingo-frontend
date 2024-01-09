@@ -33,6 +33,8 @@ const GameStop = () => {
 
     const [winners, setWinners] = useState([]);
 
+    const [showingResults, setShowingResults] = useState(false);
+
     const [validatingWords, setValidatingWords] = useState(false);
 
     const [winnerId, setWinnerId] = useState('');
@@ -91,7 +93,7 @@ const GameStop = () => {
             </Button>
         )
     }
-    // - {g?.scores && g?.scores[i]} 
+    //
     const TableWinners = () => {
         return (
             <div className="row">
@@ -101,11 +103,11 @@ const GameStop = () => {
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Nome</th>
-                                        <th scope="col">@</th>
-                                        {drawnWords?.map(w => <th scope="col">{w}</th>)}
-                                        <th scope="col">Pontos</th>
+                                        <th className="text-center"  scope="col">#</th>
+                                        <th className="text-center"  scope="col">Nome</th>
+                                        <th className="text-center"  scope="col">@</th>
+                                        {drawnWords?.map(w => <th className="text-center"  scope="col">{w}</th>)}
+                                        <th className="text-center"  scope="col">Pontos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -116,10 +118,10 @@ const GameStop = () => {
                                                 return (
                                                     <tr>
                                                         <th scope="row">{i}</th>
-                                                        <td>{g?.player?.name}</td>
-                                                        <td>{g?.player?.username}</td>
-                                                        {g?.words?.map((w, i) => <td>{w} </td>)}
-                                                        <td>{g?.score}</td>
+                                                        <td className="text-center" >{g?.player?.name}</td>
+                                                        <td className="text-center" >{g?.player?.username}</td>
+                                                        {g?.words?.map((w, i) => <td className="text-center" style={{color: g?.scores && g?.scores[i] ? 'black': 'red',}}>{g?.scores && g?.scores[i] ? w + " (" + g.scores[i] + ")" : w } </td>)}
+                                                        <td className="text-center" >{g?.score}</td>
                                                     </tr>
                                                 )
                                             })
@@ -168,6 +170,7 @@ const GameStop = () => {
     const onWinner = (playerId, playerName) => {
         setWinnerId(playerId);
         setWinnerName(playerName);
+        fetchGame();
 
         if (playerId !== id) {
             setTimeout(() => navigate('/'), 10000);
@@ -187,6 +190,7 @@ const GameStop = () => {
 
         setGames(res.data.games);
         setWinners(res.data.winners);
+        setShowingResults(res.data.showingResults);
     }
 
     const handleClickWord = (position) => {
@@ -319,7 +323,7 @@ const GameStop = () => {
         )
     }
 
-    if (winnerId) {
+    if (showingResults) {
         return (
             <>
                 <NavBar />
