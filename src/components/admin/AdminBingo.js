@@ -5,7 +5,6 @@ import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar";
 import { useNavigate } from "react-router-dom";
-import { fetchEventSource } from "@microsoft/fetch-event-source";
 
 const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/admin/bingo`;
 
