@@ -5,9 +5,37 @@ export const bingoApi = {
     mark: (request) => axiosConfig.post('/games/bingo/mark', request),
     bingo: (playerId) => axiosConfig.post(`/games/bingo/users/${playerId}/bingo`),
     getByPlayerId: (playerId) => axiosConfig.get(`/games/bingo/users/${playerId}`),
-    getAll: () => axiosConfig.get(`/games/bingo/admin`),
-    start: () => axiosConfig.post(`/games/bingo/start`),
-    restart: () => axiosConfig.post(`/games/bingo/clean`),
-    kickAll: () => axiosConfig.post(`/games/bingo/kick-all`),
+    getAll: (password) => axiosConfig.get(
+        `/games/admin/bingo`,
+        {
+            headers: {
+                Authorization: `Basic ${btoa(`admin:${password}`)}`
+            }
+        }
+    ),
+    start: (password) => axiosConfig.post(
+        `/games/admin/bingo/start`,
+        {
+            headers: {
+                Authorization: `Basic ${btoa(`admin:${password}`)}`
+            }
+        }
+    ),
+    restart: (password) => axiosConfig.post(
+        `/games/admin/bingo/clean`,
+        {
+            headers: {
+                Authorization: `Basic ${btoa(`admin:${password}`)}`
+            }
+        }
+    ),
+    kickAll: (password) => axiosConfig.post(
+        `/games/admin/bingo/kick-all`,
+        {
+            headers: {
+                Authorization: `Basic ${btoa(`admin:${password}`)}`
+            }
+        }
+    ),
     hasPassword: () => axiosConfig.get(`/games/bingo/has-password`),
 }

@@ -4,8 +4,10 @@ import { renderDrawnNumbers, renderNumber } from "../../utils/renderNumber";
 import { bingoApi } from "../../api/bingoApi";
 import { Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar";
+import { useNavigate } from "react-router-dom";
+import { fetchEventSource } from "@microsoft/fetch-event-source";
 
-const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/bingo`;
+const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/admin/bingo`;
 
 const id = v4();
 
@@ -21,6 +23,19 @@ const AdminBingo = () => {
 
     const [username, setUsername] = useState('');
 
+    const password = localStorage.getItem('password');
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!password) {
+            navigate('/');
+        }
+        if (password) {
+            fetchGame();
+        }
+    }, [password]);
+
     const onDrawnNumber = (n, dn) => {
         setNumber(n);
         setDrawnNumbers(dn);
@@ -28,7 +43,7 @@ const AdminBingo = () => {
 
     const fetchGame = async () => {
         try {
-            const res = await bingoApi.getAll();
+            const res = await bingoApi.getAll(password);
 
             setCards(res.data.cards);
             setDrawnNumbers(res.data.drawnNumbers);
@@ -42,15 +57,27 @@ const AdminBingo = () => {
     }
 
     const handleStart = async () => {
-        await bingoApi.start();
+        try {
+            await bingoApi.start(password);
+        } catch(e) { 
+            console.error(e);
+        }
     }
 
     const handleRestart = async () => {
-        await bingoApi.restart();
+        try {
+            await bingoApi.restart(password);
+        } catch(e) { 
+            console.error(e);
+        }
     }
 
     const handleKickAll = async () => {
-        await bingoApi.kickAll();
+        try {
+            await bingoApi.kickAll(password);
+        } catch(e) { 
+            console.error(e);
+        }
     }
 
     useEffect(
@@ -60,38 +87,44 @@ const AdminBingo = () => {
         []
     )
 
+    const connect = async () => {
+        const sseForUsers = await fetchEventSource(
+            `${SOCKET_URL}/connect/players/${id}?isAdmin=true`,
+            {
+                headers: {
+                    'Authorization': 'Basic ' + btoa(`admin:${password}`)
+                }
+            }
+        );
+
+
+        sseForUsers.onopen = (e) => {
+            console.log("SSE 3 Connected !");
+        };
+
+        sseForUsers.addEventListener('message', (event) => {
+            const data = JSON.parse(event.data);
+
+            switch (data?.type) {
+                case ("DRAWN_NUMBER"):
+                    onDrawnNumber(data.number, data.drawnNumbers);
+                    break;
+                default:
+                    fetchGame();
+            }
+        })
+
+        sseForUsers.onerror = (error) => {
+            console.log("SSE For Users error", error);
+            sseForUsers.close();
+        };
+        setConnected(true);
+    }
+
     useEffect(
         () => {
             if (!connected) {
-                const sseForUsers = new EventSource(
-                    `${SOCKET_URL}/connect/players/${id}?isAdmin=true`,
-                    {
-                        withCredentials: false,
-                    }
-                );
-
-
-                sseForUsers.onopen = (e) => {
-                    console.log("SSE 3 Connected !");
-                };
-
-                sseForUsers.addEventListener('message', (event) => {
-                    const data = JSON.parse(event.data);
-
-                    switch (data?.type) {
-                        case ("DRAWN_NUMBER"):
-                            onDrawnNumber(data.number, data.drawnNumbers);
-                            break;
-                        default:
-                            fetchGame();
-                    }
-                })
-
-                sseForUsers.onerror = (error) => {
-                    console.log("SSE For Users error", error);
-                    sseForUsers.close();
-                };
-                setConnected(true);
+                connect();
             }
         },
         [connected]

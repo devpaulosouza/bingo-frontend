@@ -23,7 +23,10 @@ const NavBar = () => {
             confirmButtonColor: 'green'
         });
 
-        if (result.value === 'temqueseduzir') {
+        if (result.value) {
+            console.log('set', result.value)
+            localStorage.setItem('password', result.value);
+            console.log('set', result.value)
             navigate('/admin')
         }
     }

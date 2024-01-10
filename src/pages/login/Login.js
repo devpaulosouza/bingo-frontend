@@ -159,6 +159,19 @@ const Login = () => {
     }
 
     useEffect(() => {
+        window.onbeforeunload = function() {
+            if (connection) {
+                connection.close();
+            }
+            return true;
+        };
+    
+        return () => {
+            window.onbeforeunload = null;
+        };
+    }, []);
+
+    useEffect(() => {
         connect();
         fetchHasPassword();
     }, []);
