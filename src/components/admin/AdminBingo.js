@@ -88,13 +88,8 @@ const AdminBingo = () => {
     )
 
     const connect = async () => {
-        const sseForUsers = await fetchEventSource(
-            `${SOCKET_URL}/connect/players/${id}?isAdmin=true`,
-            {
-                headers: {
-                    'Authorization': 'Basic ' + btoa(`admin:${password}`)
-                }
-            }
+        const sseForUsers = new EventSource(
+            `${SOCKET_URL}/connect/players/${id}?isAdmin=true`
         );
 
 

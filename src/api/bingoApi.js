@@ -15,6 +15,7 @@ export const bingoApi = {
     ),
     start: (password) => axiosConfig.post(
         `/games/admin/bingo/start`,
+        {},
         {
             headers: {
                 Authorization: `Basic ${btoa(`admin:${password}`)}`
@@ -23,6 +24,7 @@ export const bingoApi = {
     ),
     restart: (password) => axiosConfig.post(
         `/games/admin/bingo/clean`,
+        {},
         {
             headers: {
                 Authorization: `Basic ${btoa(`admin:${password}`)}`
@@ -31,6 +33,7 @@ export const bingoApi = {
     ),
     kickAll: (password) => axiosConfig.post(
         `/games/admin/bingo/kick-all`,
+        {},
         {
             headers: {
                 Authorization: `Basic ${btoa(`admin:${password}`)}`
