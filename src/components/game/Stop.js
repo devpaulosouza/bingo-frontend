@@ -58,6 +58,14 @@ const GameStop = () => {
 
     const navigate = useNavigate();
 
+    const isWordValid = (w) => {
+        if (!w) {
+            return false;
+        }
+
+        return w.toLowerCase().replaceAll(w.toLowerCase().charAt(0), "").length !== 0
+    }
+
     const handleClickStop = async () => {
         try {
             const res = await stopApi.stop(id);
@@ -119,7 +127,7 @@ const GameStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td className="text-center" >{g?.player?.name}</td>
                                                         <td className="text-center" >{g?.player?.username}</td>
-                                                        {g?.words?.map((w, i) => <td className="text-center" style={{ color: g?.scores && g?.scores[i] ? 'black' : 'red', }}>{g?.scores && g?.scores[i] ? w + " (" + g.scores[i] + ")" : w} </td>)}
+                                                        {g?.words?.map((w, i) => <td className="text-center" style={{ color: g?.scores && g?.scores[i] ? 'black' : 'red', }}>{w + " (" + g.scores[i] + ")"} </td>)}
                                                         <td className="text-center" >{g?.score}</td>
                                                     </tr>
                                                 )
