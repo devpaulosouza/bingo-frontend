@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 import NavBar from "../../components/NavBar";
 import { stopApi } from "../../api/stopApi";
 
-const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/stop`;
+const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/admin/stop`;
 
 const id = v4();
 
@@ -22,6 +22,8 @@ const AdminStop = () => {
 
     const [username, setUsername] = useState('');
 
+    const password = localStorage.getItem('password');
+
     const fetchGame = async () => {
         try {
             const res = await stopApi.getAll();
@@ -35,11 +37,11 @@ const AdminStop = () => {
     }
 
     const handleStart = async () => {
-        await stopApi.start();
+        await stopApi.start(password);
     }
 
     const handleKickAll = async () => {
-        await stopApi.kickAll();
+        await stopApi.kickAll(password);
     }
 
     useEffect(

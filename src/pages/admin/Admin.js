@@ -5,7 +5,7 @@ import AdminStop from "../../components/admin/AdminStop";
 
 const Admin = () => {
 
-    const [gameType, setGameType] = useState('BINGO');
+    const [gameType, setGameType] = useState('');
 
 
     const fetchConfig = async () => {
@@ -19,11 +19,12 @@ const Admin = () => {
 
     if (gameType === 'STOP') {
         return <AdminStop />
+    } else if (gameType === 'BINGO') {
+        return(<AdminBingo />)
     }
 
-    return(
-        <AdminBingo />
-    )
+    return <></>
+
 }
 
 export default Admin;
