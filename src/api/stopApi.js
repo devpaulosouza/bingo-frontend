@@ -8,7 +8,23 @@ export const stopApi = {
     setWord: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/set-word`, payload),
     stop: (playerId) => axiosConfig.post(`/games/stop/users/${playerId}/stop`),
     invalidate: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/validate-word`, payload),
-    start: () => axiosConfig.post(`/games/stop/start`),
-    kickAll: () => axiosConfig.post(`/games/stop/kick-all`),
+    start: (password) => axiosConfig.post(
+        `/games/admin/stop/start`,
+        {},
+        {
+            headers: {
+                Authorization: `Basic ${btoa(`admin:${password}`)}`
+            }
+        }
+    ),
+    kickAll: (password) => axiosConfig.post(
+        `/games/admin/stop/kick-all`,
+        {},
+        {
+            headers: {
+                Authorization: `Basic ${btoa(`admin:${password}`)}`
+            }
+        }
+    ),
     hasPassword: () => axiosConfig.get(`/games/stop/has-password`),
 }
