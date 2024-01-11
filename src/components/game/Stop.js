@@ -124,7 +124,7 @@ const GameStop = () => {
                                             ?.map((g, i) => {
                                                 return (
                                                     <tr>
-                                                        <th scope="row">{i}</th>
+                                                        <th scope="row">{i + 1}</th>
                                                         <td className="text-center" >{g?.player?.name}</td>
                                                         <td className="text-center" >{g?.player?.username}</td>
                                                         {g?.words?.map((w, i) => <td className="text-center" style={{ color: g?.scores && g?.scores[i] ? 'black' : 'red', }}>{w + " (" + g.scores[i] + ")"} </td>)}
@@ -342,11 +342,11 @@ const GameStop = () => {
             <>
                 <NavBar />
                 <div style={{ height: '100%' }}>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col">
                             {winnerId === id ? `Parabéns! Você ganhou` : `${winnerName} ganhou o jogo!`}
                         </div>
-                    </div>
+                    </div> */}
                     <TableWinners />
                 </div>
             </>
