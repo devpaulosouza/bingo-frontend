@@ -5,7 +5,7 @@ export const bingoApi = {
     mark: (request) => axiosConfig.post('/games/bingo/mark', request),
     bingo: (playerId) => axiosConfig.post(`/games/bingo/users/${playerId}/bingo`),
     getByPlayerId: (playerId) => axiosConfig.get(`/games/bingo/users/${playerId}`),
-    getAll: () => axiosConfig.get(
+    getAll: (password) => axiosConfig.get(
         `/games/admin/bingo`,
         {
             headers: {
