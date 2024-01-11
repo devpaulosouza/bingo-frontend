@@ -31,7 +31,7 @@ const AdminStop = () => {
             setGames(res.data.games);
             setDrawnWords(res.data.drawnWords);
             setWinners([...res.data.winners, ...winners])
-        } catch(e) {
+        } catch (e) {
             console.error(e);
         }
     }
@@ -42,6 +42,10 @@ const AdminStop = () => {
 
     const handleKickAll = async () => {
         await stopApi.kickAll(password);
+    }
+
+    const handleClickScore = async (playerId, i, j, points) => {
+        await stopApi.invalidate(playerId, { playerPosition: i, position: j, valid: points == 10 ? false : true, points})
     }
 
     useEffect(
@@ -95,11 +99,11 @@ const AdminStop = () => {
                             <table className="table table-striped">
                                 <thead>
                                     <tr>
-                                        <th className="text-center"  scope="col">#</th>
-                                        <th className="text-center"  scope="col">Nome</th>
-                                        <th className="text-center"  scope="col">@</th>
-                                        {drawnWords?.map(w => <th className="text-center"  scope="col">{w}</th>)}
-                                        <th className="text-center"  scope="col">Pontos</th>
+                                        <th className="text-center" scope="col">#</th>
+                                        <th className="text-center" scope="col">Nome</th>
+                                        <th className="text-center" scope="col">@</th>
+                                        {drawnWords?.map(w => <th className="text-center" scope="col">{w}</th>)}
+                                        <th className="text-center" scope="col">Pontos</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -112,7 +116,7 @@ const AdminStop = () => {
                                                         <th scope="row">{i}</th>
                                                         <td className="text-center" >{g?.player?.name}</td>
                                                         <td className="text-center" >{g?.player?.username}</td>
-                                                        {g?.words?.map((w, i) => <td className="text-center" style={{color: g?.scores && g?.scores[i] ? 'black': 'red',}}>{w + " (" + g.scores[i] + ")"} </td>)}
+                                                        {g?.words?.map((w, i) => <td className="text-center" style={{ color: g?.scores && g?.scores[i] ? 'black' : 'red', }}>{w}<br />{<Button className={g.scores[i] ? 'btn-danger' : 'btn-success'} onClick={() => handleClickScore(g.player.id, g.position, i, g.scores[i] > 0 ? -10 : 10)} >({g.scores[i]})</Button>} </td>)}
                                                         <td className="text-center" >{g?.score}</td>
                                                     </tr>
                                                 )

@@ -7,7 +7,11 @@ export const stopApi = {
     getAll: () => axiosConfig.get(`/games/stop`),
     setWord: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/set-word`, payload),
     stop: (playerId) => axiosConfig.post(`/games/stop/users/${playerId}/stop`),
-    invalidate: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/validate-word`, payload),
+    invalidate: (playerId, payload) => axiosConfig.post(`/games/stop/users/${playerId}/validate-word`, payload, {
+        headers: {
+            "Content-Type": 'application/json'
+        }
+    }),
     start: (password) => axiosConfig.post(
         `/games/admin/stop/start`,
         {},
