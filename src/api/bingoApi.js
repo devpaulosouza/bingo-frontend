@@ -6,7 +6,7 @@ export const bingoApi = {
     bingo: (playerId) => axiosConfig.post(`/games/bingo/users/${playerId}/bingo`),
     getByPlayerId: (playerId) => axiosConfig.get(`/games/bingo/users/${playerId}`),
     getAll: (password) => axiosConfig.get(
-        `/games/admin/bingo`,
+        `/games/bingo`,
         {
             headers: {
                 Authorization: `Basic ${btoa(`admin:${password}`)}`
