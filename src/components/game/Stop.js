@@ -242,6 +242,11 @@ const GameStop = () => {
     }
 
     const onPing = async () => {
+
+        if (showingResults) {
+            fetchGame();
+        }
+
     }
 
     const connect = () => {
