@@ -205,7 +205,7 @@ const GameStop = () => {
 
     const handleClickWord = (position) => {
         try {
-            stopApi.invalidate(id, { playerPosition: position, position: validateWordCount, valid: false })
+            stopApi.invalidate(id, { playerPosition: position, position: validateWordCount, valid: false, points: -1 })
         } catch(e) {
             console.error(e);
         }
