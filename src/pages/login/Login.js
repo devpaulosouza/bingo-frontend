@@ -50,6 +50,12 @@ const Login = () => {
         try {
             let res;
 
+            if (!username || !name) {
+                setAllowed(false);
+                setMessage('Informe um nome de usuário e um nome')
+                return;
+            }
+
             if (gameType === 'BINGO') {
                 res = await bingoApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
             } else {
