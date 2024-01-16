@@ -9,7 +9,7 @@ export const bingoApi = {
         `/games/bingo`,
         {
             headers: {
-                Authorization: `Basic ${btoa(`admin:${password}`)}`
+                // Authorization: `Basic ${btoa(`admin:${password}`)}`
             }
         }
     ),

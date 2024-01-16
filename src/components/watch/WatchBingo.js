@@ -124,32 +124,35 @@ const WatchBingo = () => {
         )
     }
 
-    const renderBoards = () => {
 
+    const renderCard = (card) => {
         return (
-            cards?.map(
-                card => (
-                    <div className="row mt-4">
-                        <div className="col">
-                            <div className="row">
-                                <div className="col text-center">
-                                    Jogador: {card.player.name}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col text-center">
-                                    Usuário: {card.player.username}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col jumbotron d-flex align-items-center justify-content-center text-center">
-                                    {renderRows(card)}
-                                </div>
-                            </div>
-                        </div>
+            <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3 mt-4">
+                <div className="row">
+                    <div className="col text-center">
+                        Jogador: {card.player.name}
                     </div>
-                )
-            )
+                </div>
+                <div className="row">
+                    <div className="col text-center">
+                        Usuário: {card.player.username}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col jumbotron d-flex align-items-center justify-content-center text-center">
+                        {renderRows(card)}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const renderBoards = () => {
+        return (
+            <div className="row">
+                {cards?.map(renderCard)}
+            </div>
+
         )
     }
 

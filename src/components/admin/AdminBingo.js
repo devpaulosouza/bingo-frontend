@@ -50,7 +50,7 @@ const AdminBingo = () => {
             setStarted(res.data.gameRunning);
             setWinners(res.data.winners);
             setGameMode(res.data.mode);
-        } catch(e) {
+        } catch (e) {
             console.error(e);
         }
     }
@@ -58,7 +58,7 @@ const AdminBingo = () => {
     const handleStart = async () => {
         try {
             await bingoApi.start(password);
-        } catch(e) { 
+        } catch (e) {
             console.error(e);
         }
     }
@@ -66,7 +66,7 @@ const AdminBingo = () => {
     const handleRestart = async () => {
         try {
             await bingoApi.restart(password);
-        } catch(e) { 
+        } catch (e) {
             console.error(e);
         }
     }
@@ -74,7 +74,7 @@ const AdminBingo = () => {
     const handleKickAll = async () => {
         try {
             await bingoApi.kickAll(password);
-        } catch(e) { 
+        } catch (e) {
             console.error(e);
         }
     }
@@ -161,32 +161,34 @@ const AdminBingo = () => {
         )
     }
 
-    const renderBoards = () => {
-
+    const renderCard = (card) => {
         return (
-            cards?.map(
-                card => (
-                    <div className="row mt-4">
-                        <div className="col">
-                            <div className="row">
-                                <div className="col text-center">
-                                    Jogador: {card.player.name}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col text-center">
-                                    Usuário: {card.player.username}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col jumbotron d-flex align-items-center justify-content-center text-center">
-                                    {renderRows(card)}
-                                </div>
-                            </div>
-                        </div>
+            <div className="col-sm-12 col-md-6 col-lg-4 col-xl-3 mt-4">
+                <div className="row">
+                    <div className="col text-center">
+                        Jogador: {card.player.name}
                     </div>
-                )
-            )
+                </div>
+                <div className="row">
+                    <div className="col text-center">
+                        Usuário: {card.player.username}
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col jumbotron d-flex align-items-center justify-content-center text-center">
+                        {renderRows(card)}
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    const renderBoards = () => {
+        return (
+            <div className="row">
+                {cards?.map(renderCard)}
+            </div>
+
         )
     }
 
@@ -267,7 +269,7 @@ const AdminBingo = () => {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col">
+                    <div className="col container">
                         {
                             renderBoards()
                         }
