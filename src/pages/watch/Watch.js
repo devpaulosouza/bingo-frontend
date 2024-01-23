@@ -3,6 +3,7 @@ import WatchBingo from "../../components/watch/WatchBingo";
 import NavBar from "../../components/NavBar";
 import WatchStop from "../../components/watch/WatchStop";
 import { gameApi } from "../../api/gameApi";
+import WatchDrawn from "../../components/watch/WatchDrawn";
 
 const Watch = () => {
 
@@ -27,6 +28,13 @@ const Watch = () => {
     else if (gameType === 'BINGO') {
         return (
             <WatchBingo />
+        )
+    }
+
+
+    else if (gameType === 'DRAWN') {
+        return (
+            <WatchDrawn />
         )
     }
 
