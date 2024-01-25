@@ -21,6 +21,7 @@ const GameBingo = () => {
     const [winner, setWinner] = useState('');
     const [winnerId, setWinnerId] = useState('');
     const [gameMode, setGameMode] = useState('');
+    const [playersCount, setPlayersCount] = useState(1);
 
     const navigate = useNavigate();
 
@@ -46,6 +47,7 @@ const GameBingo = () => {
                 setStarted(res.data.gameRunning);
                 setMarkedNumbers(res.data.card.markedNumbers)
                 setGameMode(res.data.mode)
+                setPlayersCount(res.data.playersCount);
 
                 tries = 0;
             }
@@ -160,6 +162,9 @@ const GameBingo = () => {
                 case ("GAME_MODE"):
                     onGameMode(data.mode);
                     break;
+                case ("JOIN"):
+                    resetBoard();
+                    break;
                 case ("KICK"):
                     onKick();
                     sseForUsers.close();
@@ -238,6 +243,11 @@ const GameBingo = () => {
                     <div className="row">
                         <div className="col">
                             <p>Instruções: {gameMode === 'STANDARD' ? 'Marque linha, coluna ou diagonal para ganhar' : 'Marque todos os números para ganhar'}</p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>Jogadores online: {playersCount}</p>
                         </div>
                     </div>
                 </div>
