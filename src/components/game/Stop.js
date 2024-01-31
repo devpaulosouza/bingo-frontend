@@ -331,7 +331,7 @@ const GameStop = () => {
             <>
                 <NavBar />
                 <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    Aguarde o jogo começar
+                    Aguarde o jogo começar<br/><br/>
 
                     Jogadores online: {playersCount}
                 </div>
