@@ -52,6 +52,8 @@ const GameStop = () => {
 
     const [clear, setClear] = useState(false);
 
+    const [playersCount, setPlayersCount] = useState(1);
+
     const location = useLocation();
 
     const id = location.state?.id;
@@ -194,6 +196,7 @@ const GameStop = () => {
             setGames(res.data.games);
             setWinners(res.data.winners);
             setShowingResults(res.data.showingResults);
+            setPlayersCount(res.data.playersCount);
             if (res?.data?.winners?.length) {
                 setWinnerName(res?.data.winners[0].name);
                 setWinnerId(res?.data.winners[0].id);
@@ -228,6 +231,7 @@ const GameStop = () => {
                 setStopped(res.data.stopped);
                 setValidatingWords(res.data.validatingWords);
                 setScores(res.data.scores);
+                setPlayersCount(res.data.playersCount);
 
                 setCanStop(res.data.canStop);
                 setStarted(!!res.data.letter);
@@ -292,6 +296,9 @@ const GameStop = () => {
                 case ('PING'):
                     onPing();
                     break;
+                case('JOIN'):
+                    resetGame();
+                    break;
                 case ('WINNER'):
                     onWinner(data.playerId, data.playerName);
                     break;
@@ -325,6 +332,8 @@ const GameStop = () => {
                 <NavBar />
                 <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
                     Aguarde o jogo começar
+
+                    Jogadores online: {playersCount}
                 </div>
             </>
         )
