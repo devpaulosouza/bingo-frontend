@@ -247,7 +247,7 @@ const GameStop = () => {
 
     const onPing = async () => {
 
-        if (showingResults) {
+        if (showingResults || draw) {
             fetchGame();
         }
 
