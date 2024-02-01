@@ -366,23 +366,23 @@ const GameStop = () => {
             </>
         )
     }
-    // if (draw) {
-    //     return (
-    //         <>
-    //             <NavBar />
-    //             <div style={{ height: '100%' }}>
-    //                 <div className="row">
-    //                     <div className="col">
-    //                         Deu empate!!!
+    if (draw) {
+        return (
+            <>
+                <NavBar />
+                <div style={{ height: '100%' }}>
+                    {/* <div className="row">
+                        <div className="col">
+                            Deu empate!!!
 
-    //                         O jogo vai reiniciar em instantes com os melhores jogadores
-    //                     </div>
-    //                 </div>
-    //                 <TableWinners />
-    //             </div>
-    //         </>
-    //     )
-    // }
+                            O jogo vai reiniciar em instantes com os melhores jogadores
+                        </div>
+                    </div> */}
+                    <TableWinners />
+                </div>
+            </>
+        )
+    }
 
     if (validateWordCount !== null) {
         return (
