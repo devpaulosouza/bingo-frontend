@@ -371,13 +371,13 @@ const GameStop = () => {
             <>
                 <NavBar />
                 <div style={{ height: '100%' }}>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col">
                             Deu empate!!!
 
                             O jogo vai reiniciar em instantes com os melhores jogadores
                         </div>
-                    </div>
+                    </div> */}
                     <TableWinners />
                 </div>
             </>
