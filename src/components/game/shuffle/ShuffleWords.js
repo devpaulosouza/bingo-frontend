@@ -4,10 +4,8 @@ import { debounce } from "../../utils";
 import { Button } from "react-bootstrap";
 
 const arePropEquals = (prev, next) => {
-    console.log('prop')
-    console.log(prev, next)
     return (
-        true
+        false
     )
 }
 
@@ -32,6 +30,8 @@ const Line = ({ name, value, idx, clear, setClear, words, setWords }) => {
 
         const w = JSON.parse(JSON.stringify(words));
 
+        console.log(words, w)
+
         for (let i = 0; i < words.length; ++i) {
             if (i === idx) {
                 w[i] = e.target.value;
@@ -53,8 +53,6 @@ const MemoLine = React.memo(Line, arePropEquals)
 
 const ShuffleWords = ({ drawnWords, words, clear, setClear, onSend }) => {
     const [w, setW] = useState(words);
-
-    console.log(w);
 
     return (
         <div className="container-fluid login-container pt-5 mt-4">
