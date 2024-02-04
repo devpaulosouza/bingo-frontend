@@ -61,7 +61,7 @@ const MemoLine = React.memo(Line, arePropEquals)
 const ShuffleWords = ({ drawnWords, words, clear, setClear, onSend }) => {
     const [w, setW] = useState(drawnWords.map(w => ''));
 
-    console.log(drawnWords)
+    console.log(w)
 
     return useMemo(
         () => <div className="container-fluid login-container pt-5 mt-4">
@@ -72,7 +72,7 @@ const ShuffleWords = ({ drawnWords, words, clear, setClear, onSend }) => {
                 <Button onClick={() => onSend(w)}>Enviar</Button>
             </form>
         </div>
-    , [])
+    , [w])
 
 }
 
