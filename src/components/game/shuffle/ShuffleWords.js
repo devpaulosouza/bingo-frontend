@@ -4,44 +4,27 @@ import { debounce } from "../../utils";
 import { Button } from "react-bootstrap";
 
 const arePropEquals = (prev, next) => {
-    console.log(prev.name === next.name);
-    console.log(prev.value === next.value);
-    console.log(prev.idx === next.idx);
-    console.log(prev.clear === next.clear);
+    // console.log('prop', prev.words.map((w, i) => next[i] == w).reduce((p, c) => p && c, true))
     return (
-        prev.name === next.name
-        && prev.value === next.value
-        && prev.idx === next.idx
-        && prev.clear === next.clear
+        prev.words.map((w, i) => next[i] == w).reduce((p, c) => p && c, true)
     )
 }
 
 
 
-const Line = ({ name, value, idx, clear, setClear, words, setWords }) => {
-
-    const [v, setV] = useState(value || '');
-    const ref = useRef(null);
-
-    useEffect(() => {
-        if (clear) {
-            console.log('clear')
-            setV('');
-            setClear(false);
-        }
-    }, [clear])
-
+const Line = ({ name, value, idx, words, setWords }) => {
 
     const handleValueChange = (e) => {
-        setV(e.target.value);
-
         const w = JSON.parse(JSON.stringify(words));
 
-        console.log(words, w)
+        // console.log(words, e.target.value)
 
         for (let i = 0; i < words.length; ++i) {
             if (i === idx) {
+                // console.log(i, idx, e.target.value)
                 w[i] = e.target.value;
+
+                // console.log('w', w)
                 setWords(w);
             }
         }
@@ -51,28 +34,29 @@ const Line = ({ name, value, idx, clear, setClear, words, setWords }) => {
     return (
         <div className="mb-3">
             <label htmlFor="name" className="form-label">{name}</label>
-            <input type="text" id="name" className="form-control" placeholder={name} value={v} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" ref={ref} />
+            <input type="text" id="name" className="form-control" placeholder={name} value={words[idx] || ''} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
         </div>
     )
 }
 
 const MemoLine = React.memo(Line, arePropEquals)
 
-const ShuffleWords = ({ drawnWords, words, clear, setClear, onSend }) => {
-    const [w, setW] = useState(drawnWords.map(w => ''));
-
-    console.log(w)
+const ShuffleWords = ({ drawnWords, onSend }) => {
+    const [words, setWords] = useState(drawnWords.map(d => ''));
 
     return useMemo(
         () => <div className="container-fluid login-container pt-5 mt-4">
             <form>
                 <fieldset>
-                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} clear={clear} setClear={setClear} words={w} setWords={setW} />)}
+                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} words={words} setWords={v => {
+                        // console.log('value', v[idx]);
+                        setWords(v)
+                    }} />)}
                 </fieldset>
-                <Button onClick={() => onSend(w)}>Enviar</Button>
+                <Button onClick={() => onSend(words)}>Enviar</Button>
             </form>
         </div>
-    , [w])
+        , [words])
 
 }
 

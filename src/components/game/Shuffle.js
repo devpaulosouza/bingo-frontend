@@ -22,6 +22,8 @@ const GameShuffle = () => {
     const [shuffledWords, setShuffledWords] = useState([]);
     const [winners, setWinners] = useState([]);
 
+    const [words, setWords] = useState([])
+
     const [hiddenWords, setHiddenWords] = useState([])
 
     const [tries, setTries] = useState(0);
@@ -87,6 +89,7 @@ const GameShuffle = () => {
             setWinners(res.data.winners)
             setFocused(res.data.focused)
             setPlayersCount(res.data.playersCount)
+            setWords(res.data.shuffledWords.map(s => ''))
 
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -183,7 +186,7 @@ const GameShuffle = () => {
 
     const Words = () => {
         return (
-            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} />
+            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} />
         )
     }
 
@@ -209,16 +212,16 @@ const GameShuffle = () => {
         )
     }
 
-    if (!focused) {
-        return (
-            <>
-                <NavBar />
-                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    Desclassificado! Você saiu da tela.
-                </div>
-            </>
-        )
-    }
+    // if (!focused) {
+    //     return (
+    //         <>
+    //             <NavBar />
+    //             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+    //                 Desclassificado! Você saiu da tela.
+    //             </div>
+    //         </>
+    //     )
+    // }
 
     return (
         <>
