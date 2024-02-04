@@ -212,16 +212,16 @@ const GameShuffle = () => {
         )
     }
 
-    // if (!focused) {
-    //     return (
-    //         <>
-    //             <NavBar />
-    //             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-    //                 Desclassificado! Você saiu da tela.
-    //             </div>
-    //         </>
-    //     )
-    // }
+    if (!focused) {
+        return (
+            <>
+                <NavBar />
+                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                    Desclassificado! Você saiu da tela.
+                </div>
+            </>
+        )
+    }
 
     return (
         <>
