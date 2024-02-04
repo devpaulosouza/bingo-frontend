@@ -73,6 +73,7 @@ const GameShuffle = () => {
             setWords(res.data.words?.map(w => w || ''));
             setHiddenWords(res.data.words);
             setWinners(res.data.winners)
+            setFocused(res.data.focused)
 
         } catch (e) {
             console.error(e, e?.response?.data?.detail);

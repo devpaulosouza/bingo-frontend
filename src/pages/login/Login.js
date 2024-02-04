@@ -83,7 +83,8 @@ const Login = () => {
                 'Max players reached': 'Número máximo de jogadores atingido',
                 'Username is not allowed to play in this session': 'Nome de usuário não está na lista de jogadores',
                 'The game is not accepting new players': 'Jogo em andamento. Aguarde o término deste jogo',
-                'Game is not running': 'Aguarde o jogo começar'
+                'Game is not running': 'Aguarde o jogo começar',
+                'The game already has winners': 'Algém já ganhou o jogo! Aguarde um novo jogo para entrar'
             }
 
             setAllowed(false);

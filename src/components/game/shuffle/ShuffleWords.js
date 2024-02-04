@@ -35,10 +35,9 @@ const Line = ({ name, value, idx, clear, setClear, words, setWords }) => {
         for (let i = 0; i < words.length; ++i) {
             if (i === idx) {
                 w[i] = e.target.value;
+                setWords(w);
             }
         }
-        console.log(w, idx)
-        setWords(w);
     }
 
 
