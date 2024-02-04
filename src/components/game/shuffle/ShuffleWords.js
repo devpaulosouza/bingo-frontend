@@ -22,7 +22,7 @@ const Line = ({ name, value, idx, words, setWords }) => {
         for (let i = 0; i < words.length; ++i) {
             if (i === idx) {
                 // console.log(i, idx, e.target.value)
-                w[i] = e.target.value;
+                w[i] = e.target.value.replaceAll(' ', '');
 
                 // console.log('w', w)
                 setWords(w);
