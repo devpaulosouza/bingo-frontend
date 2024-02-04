@@ -165,7 +165,7 @@ const GameShuffle = () => {
             console.log("SSE For Users error", error);
             setTimeout(connect, 3000)
             sseForUsers.close();
-            setTries(tries + 1);
+            // setTries(tries + 1);
         };
         // setConnection(sseForUsers);
     }
