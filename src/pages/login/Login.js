@@ -8,6 +8,7 @@ import { v4 as uuidV4 } from "uuid";
 import NavBar from "../../components/NavBar";
 import { gameApi } from "../../api/gameApi";
 import { stopApi } from "../../api/stopApi";
+import { shuffleApi } from "../../api/shuffleApi";
 
 const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games`;
 
@@ -58,12 +59,16 @@ const Login = () => {
 
             if (gameType === 'BINGO') {
                 res = await bingoApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
-            } else {
+            } 
+            else if (gameType === 'SHUFFLE') {
+                res = await shuffleApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
+            }
+            else {
                 res = await stopApi.join({ name, username: username.replace('@', '').replace(' ', ''), id, password });
             }
 
             if (res.status == 200) {
-                navigate('game', { state: { id: res.data.player.id, numbers: res.data.numbers, gameType } });
+                navigate('game', { state: { id, numbers: res.data.numbers, gameType } });
             }
 
             if (connection) {
@@ -77,7 +82,8 @@ const Login = () => {
                 'Password does not match': 'Senha inválida',
                 'Max players reached': 'Número máximo de jogadores atingido',
                 'Username is not allowed to play in this session': 'Nome de usuário não está na lista de jogadores',
-                'The game is not accepting new players': 'Jogo em andamento. Aguarde o término deste jogo'
+                'The game is not accepting new players': 'Jogo em andamento. Aguarde o término deste jogo',
+                'Game is not running': 'Aguarde o jogo começar'
             }
 
             setAllowed(false);
@@ -101,6 +107,9 @@ const Login = () => {
             }
             else if (gameType === 'STOP') {
                 res = await stopApi.hasPassword();
+            }
+            else if (gameType === 'SHUFFLE') {
+                res = await shuffleApi.hasPassword();
             }
 
             if (res.status == 200) {
@@ -189,7 +198,7 @@ const Login = () => {
                 <form>
                     <fieldset>
                         <legend>Informe seus dados para jogar</legend>
-                        <p>Jogo: {gameType === 'BINGO' ? 'Bingo' : 'Stop'}</p>
+                        <p>Jogo: {gameType === 'BINGO' ? 'Bingo' : gameType === 'STOP' ? 'Stop' : 'Desembaralhar palavras'}</p>
                         <div className="mb-3">
                             <label htmlFor="name" className="form-label">Nome</label>
                             <input type="text" id="name" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
