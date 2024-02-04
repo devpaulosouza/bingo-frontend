@@ -20,7 +20,6 @@ const GameShuffle = () => {
     const [letter, setLetter] = useState('');
 
     const [shuffledWords, setShuffledWords] = useState([]);
-    const [words, setWords] = useState([]);
     const [winners, setWinners] = useState([]);
 
     const [hiddenWords, setHiddenWords] = useState([])
@@ -45,12 +44,26 @@ const GameShuffle = () => {
 
 
     const onHidden = async () => {
-        await shuffleApi.unfocus(id);
-        console.log('unfocus')
-        setFocused(false)
+        if (focused) {
+            try {
+                await shuffleApi.unfocus(id);
+                console.log('unfocus', focused)
+                setFocused(false)
+            } catch (e) {
+
+            }
+        }
     }
 
-    window.addEventListener('blur', onHidden);
+    useEffect(() => {
+        const focusHandler = () => {
+            if (focused) {
+                onHidden()
+            };
+        };
+        window.addEventListener("blur", focusHandler);
+        return () => window.removeEventListener("blur", focusHandler);
+    }, [focused]);
 
     useEffect(() => {
         setVisibilityState(document.visibilityState)
@@ -70,7 +83,6 @@ const GameShuffle = () => {
             const res = await shuffleApi.getByPlayerId(id);
 
             setShuffledWords(res.data.shuffledWords);
-            setWords(res.data.words?.map(w => w || ''));
             setHiddenWords(res.data.words);
             setWinners(res.data.winners)
             setFocused(res.data.focused)
@@ -85,6 +97,16 @@ const GameShuffle = () => {
 
     }
 
+    const fetchPlayersCount = async () => {
+        try {
+            // const res = await shuffleApi.getByPlayerId(id);
+
+            // setPlayersCount(res.data.playersCount);
+        } catch (e) {
+
+        }
+    }
+
     const handleSend = async (w) => {
         try {
             const res = await shuffleApi.setWords(id, { words: w })
@@ -92,7 +114,7 @@ const GameShuffle = () => {
             if (res.status === 200) {
                 setWinner(res.data.winner);
             }
-        } catch(e) {
+        } catch (e) {
 
         }
 
@@ -129,9 +151,9 @@ const GameShuffle = () => {
                 case ('PING'):
                     break;
                 case ('JOIN'):
-                    resetGame();
+                    fetchPlayersCount();
                     break;
-                case('WINNER'):
+                case ('WINNER'):
                     resetGame();
             }
         })
@@ -145,44 +167,23 @@ const GameShuffle = () => {
         // setConnection(sseForUsers);
     }
 
+    const OnlinePlayers = () => {
+
+        return <div className="row">
+            <div className="col text-center">
+                <p>Jogadores online: {playersCount}</p>
+            </div>
+        </div>
+    }
+
     useEffect(() => {
         connect();
         resetGame();
     }, []);
 
-    const Word = ({ value, shuffled, i, onChange }) => {
-
-        const [w, setW] = useState(value || '')
-
-        console.log('rerender', value)
-
-        const render = () => (
-            <div className="mb-3">
-                <label htmlFor={`word-${shuffled}`} className="form-label">{shuffled}</label>
-                <input type="text" id={`word-${w}`} className="form-control" placeholder={shuffled} value={w} onChange={e => {
-                    const _w = JSON.parse(JSON.stringify(words));
-
-                    for (let j = 0; j < words.length; ++j) {
-                        if (j == i) {
-                            setW(e.target.value)
-                            _w[j] = e.target.value;
-
-                        }
-                    }
-                    console.log(_w)
-
-                    onChange(_w)
-                }
-                } />
-            </div>
-        )
-
-        return useMemo(render, [shuffled])
-    }
-
     const Words = () => {
         return (
-            <ShuffleWords drawnWords={shuffledWords} words={words} setWords={setWords} onSend={handleSend}/>
+            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} />
         )
     }
 
@@ -208,16 +209,16 @@ const GameShuffle = () => {
         )
     }
 
-    if (!focused) {
-        return (
-            <>
-                <NavBar />
-                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    Desclassificado! Você saiu da tela.
-                </div>
-            </>
-        )
-    }
+    // if (!focused) {
+    //     return (
+    //         <>
+    //             <NavBar />
+    //             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+    //                 Desclassificado! Você saiu da tela.
+    //             </div>
+    //         </>
+    //     )
+    // }
 
     return (
         <>
@@ -233,11 +234,6 @@ const GameShuffle = () => {
                     <div className="row">
                         <div className="col text-center">
                             <h5>Não saia da página, ou irá perder automáticamente!</h5>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col text-center">
-                            <p>Jogadoes online: {playersCount}</p>
                         </div>
                     </div>
                     <div className="row">
