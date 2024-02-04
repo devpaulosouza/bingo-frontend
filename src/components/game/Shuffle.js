@@ -74,6 +74,7 @@ const GameShuffle = () => {
             setHiddenWords(res.data.words);
             setWinners(res.data.winners)
             setFocused(res.data.focused)
+            setPlayersCount(res.data.playersCount)
 
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -232,6 +233,11 @@ const GameShuffle = () => {
                     <div className="row">
                         <div className="col text-center">
                             <h5>Não saia da página, ou irá perder automáticamente!</h5>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col text-center">
+                            <p>Jogadoes online: {playersCount}</p>
                         </div>
                     </div>
                     <div className="row">
