@@ -4,8 +4,15 @@ import { debounce } from "../../utils";
 import { Button } from "react-bootstrap";
 
 const arePropEquals = (prev, next) => {
+    console.log(prev.name === next.name);
+    console.log(prev.value === next.value);
+    console.log(prev.idx === next.idx);
+    console.log(prev.clear === next.clear);
     return (
-        false
+        prev.name === next.name
+        && prev.value === next.value
+        && prev.idx === next.idx
+        && prev.clear === next.clear
     )
 }
 
@@ -52,19 +59,21 @@ const Line = ({ name, value, idx, clear, setClear, words, setWords }) => {
 const MemoLine = React.memo(Line, arePropEquals)
 
 const ShuffleWords = ({ drawnWords, words, clear, setClear, onSend }) => {
-    const [w, setW] = useState(words);
+    const [w, setW] = useState(drawnWords.map(w => ''));
 
-    return (
-        <div className="container-fluid login-container pt-5 mt-4">
+    console.log(drawnWords)
+
+    return useMemo(
+        () => <div className="container-fluid login-container pt-5 mt-4">
             <form>
                 <fieldset>
-                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={words[idx]} idx={idx} key={i} clear={clear} setClear={setClear} words={w} setWords={setW} />)}
+                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} clear={clear} setClear={setClear} words={w} setWords={setW} />)}
                 </fieldset>
                 <Button onClick={() => onSend(w)}>Enviar</Button>
             </form>
         </div>
-    )
+    , [])
 
 }
 
-export default ShuffleWords;
+export default React.memo(ShuffleWords);
