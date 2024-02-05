@@ -113,18 +113,23 @@ const Login = () => {
                 res = await shuffleApi.hasPassword();
             }
 
-            if (res.status == 200) {
+            if (res?.status == 200) {
                 setHasPassword(res.data.hasPassword);
             }
-
-            const configRes = await gameApi.getConfig();
-
-            if (configRes.status == 200) {
-                setGameType(configRes.data.gameType);
-            }
-
         } catch (e) {
             console.error(e);
+        }
+    }
+
+    const fetchGameType = async () => {
+        try {
+            const res = await gameApi.getConfig();
+
+            if (res?.status == 200) {
+                setGameType(res.data.gameType);
+            }
+        } catch(e) {
+
         }
     }
 
@@ -188,8 +193,8 @@ const Login = () => {
     }, []);
 
     useEffect(() => {
+        fetchGameType();
         connect();
-        fetchHasPassword();
     }, []);
 
     return (
