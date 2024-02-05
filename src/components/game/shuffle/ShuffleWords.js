@@ -91,7 +91,7 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFini
                 {!disabled && <Button onClick={() => onSend(words)}>Enviar</Button>}
             </form>
         </div>
-        , [JSON.stringify(words), JSON.stringify(validWords)])
+        , [JSON.stringify(words), JSON.stringify(validWords), finished])
 
 }
 
