@@ -12,7 +12,7 @@ const arePropEquals = (prev, next) => {
 
 
 
-const Line = ({ name, value, idx, words, setWords, validWords, disabled }) => {
+const Line = ({ name, value, idx, words, setWords, validWords, disabled, onBlur }) => {
 
     const handleValueChange = (e) => {
         const w = JSON.parse(JSON.stringify(words));
@@ -30,19 +30,54 @@ const Line = ({ name, value, idx, words, setWords, validWords, disabled }) => {
         }
     }
 
+    const handleSetWord = () => {
+        // onBlur(words);
+    }
+
+    // console.log(words)
+
 
     return (
         <div className="mb-3">
             <label htmlFor="name" className="form-label">{name}</label>
-            <input type="text" id="name" disabled={disabled} className={`form-control ${validWords.length && validWords[idx] ? 'is-valid' : 'is-invalid'}`} placeholder={name} value={words[idx] || ''} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
+            <input type="text" id="name" disabled={disabled} onBlur={handleSetWord} className={`form-control ${validWords.length && validWords[idx] ? 'is-valid' : 'is-invalid'}`} placeholder={name} value={words[idx] || ''} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
         </div>
     )
 }
 
 const MemoLine = React.memo(Line, arePropEquals)
 
-const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled }) => {
+const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFinish, unfocusTime, setValues, finished }) => {
+
+    // console.log(!unfocusTime, values)
     const [words, setWords] = useState(values?.length ? values : drawnWords.map(d => ''));
+
+    // useEffect(() => {
+    //     if (disabled) {
+    //         // onFinish(words);
+    //     }
+    // }, [words, disabled])
+
+    console.log(words, finished)
+
+
+    useEffect(() => {
+        const focusHandler = () => {
+            setValues(words)
+        };
+        window.addEventListener("blur", focusHandler);
+        return () => window.removeEventListener("blur", focusHandler);
+    }, [words]);
+
+    useEffect(() => {
+        if (disabled && finished) {
+            console.log(words);
+            onFinish(words);
+        }
+    }, [disabled, finished])
+
+
+    // console.log(useMemo(() => <></>), [JSON.stringify(words)])
 
     return useMemo(
         () => <div className="container-fluid login-container pt-5 mt-4">
@@ -56,7 +91,7 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled }) => {
                 {!disabled && <Button onClick={() => onSend(words)}>Enviar</Button>}
             </form>
         </div>
-        , [words])
+        , [JSON.stringify(words), JSON.stringify(validWords)])
 
 }
 
