@@ -22,6 +22,8 @@ const GameShuffle = () => {
     const [shuffledWords, setShuffledWords] = useState([]);
     const [winners, setWinners] = useState([]);
 
+    const [validWords, setValidWords] = useState([])
+
     const [words, setWords] = useState([])
 
     const [hiddenWords, setHiddenWords] = useState([])
@@ -114,8 +116,11 @@ const GameShuffle = () => {
         try {
             const res = await shuffleApi.setWords(id, { words: w })
 
+            setWords(w)
+
             if (res.status === 200) {
                 setWinner(res.data.winner);
+                setValidWords(res.data.validWords);
             }
         } catch (e) {
 
@@ -186,7 +191,7 @@ const GameShuffle = () => {
 
     const Words = () => {
         return (
-            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} />
+            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} />
         )
     }
 
