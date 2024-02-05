@@ -4,6 +4,7 @@ export const shuffleApi = {
     join: (credentials) => axiosConfig.post('/games/shuffle/join', credentials),
     getByPlayerId: (playerId) => axiosConfig.get(`/games/shuffle/players/${playerId}`),
     setWords: (playerId, payload) => axiosConfig.post(`/games/shuffle/players/${playerId}/set-words`, payload),
+    setWordsFinished: (playerId, payload) => axiosConfig.post(`/games/shuffle/players/${playerId}/set-words?finished=true`, payload),
     unfocus: (playerId) => axiosConfig.patch(`/games/shuffle/players/${playerId}/unfocused`),
     getAll: (password) => axiosConfig.get(
         `/games/shuffle`,

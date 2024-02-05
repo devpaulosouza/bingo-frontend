@@ -26,6 +26,8 @@ const GameShuffle = () => {
     const [startAt, setStartAt] = useState(null);
     const [started, setStarted] = useState(false);
 
+    const [finished, setFinished] = useState(false);
+
     const [startIn, setStartIn] = useState(null);
 
     const [words, setWords] = useState([]);
@@ -76,7 +78,6 @@ const GameShuffle = () => {
         if (focused) {
             try {
                 await shuffleApi.unfocus(id);
-                console.log('unfocus', focused)
                 setFocused(false)
             } catch (e) {
 
@@ -86,24 +87,33 @@ const GameShuffle = () => {
 
     useEffect(() => {
         const focusHandler = () => {
-            if (focused) {
+            if (!started) {
+                return;
+            }
+
+            if (unfocusTime === null && focused) {
                 setUnfocusTime(new Date())
-            };
+            }
         };
         window.addEventListener("blur", focusHandler);
         return () => window.removeEventListener("blur", focusHandler);
-    }, [focused]);
+    }, [focused, unfocusTime, started]);
 
     useEffect(() => {
         const focusHandler = () => {
-            console.log(new Date() - unfocusTime)
-            if (unfocusTime && (Math.abs(new Date() - unfocusTime) > 3000) && started) {
+            setUnfocusTime(null);
+
+            if (!started) {
+                return;
+            }
+
+            if (unfocusTime !== null && (Math.abs(new Date() - unfocusTime) > 3000) && started) {
                 onHidden()
             }
         };
         window.addEventListener("focus", focusHandler);
         return () => window.removeEventListener("focus", focusHandler);
-    }, [unfocusTime, focused]);
+    }, [focused, unfocusTime, started]);
 
 
     const resetGame = async (callback = () => { }) => {
@@ -131,6 +141,38 @@ const GameShuffle = () => {
             }
         }
 
+    }
+
+    const fetchWinner = async (callback = () => { }) => {
+        try {
+            if (!id) {
+                navigate('/');
+                return;
+            }
+
+            const res = await shuffleApi.getByPlayerId(id);
+
+            setWinners(res.data.winners);
+            setFinished(true);
+        } catch (e) {
+            console.error(e, e?.response?.data?.detail);
+            if (e?.response?.data?.detail === 'Player was not found') {
+                navigate('/')
+            }
+        }
+
+    }
+
+    useEffect(() => {
+        if (finished) {
+            setFinished(false);
+        }
+    }, [finished])
+
+    const fetchValidWords = async (w) => {
+        const res = await shuffleApi.setWordsFinished(id, { words: w });
+
+        setValidWords(res.data.validWords);
     }
 
     const fetchPlayersCount = async () => {
@@ -193,7 +235,7 @@ const GameShuffle = () => {
                     fetchPlayersCount();
                     break;
                 case ('WINNER'):
-                    resetGame();
+                    fetchWinner();
             }
         })
 
@@ -222,7 +264,7 @@ const GameShuffle = () => {
 
     const Words = () => {
         return (
-            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} disabled={winners.length} />
+            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} disabled={!!winners.length} onFinish={fetchValidWords} setValues={setWords} finished={finished} />
         )
     }
 
@@ -241,9 +283,9 @@ const GameShuffle = () => {
         return (
             <>
                 <NavBar />
-                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                <div className="container" style={{ height: '100%' }}>
                     <div className="row">
-                        <div className="col">
+                        <div className="col mt-5 d-flex align-items-center justify-content-center">
                             {winners[0].username} ganhou!
                         </div>
                     </div>
