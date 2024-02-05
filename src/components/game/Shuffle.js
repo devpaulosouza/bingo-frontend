@@ -23,6 +23,10 @@ const GameShuffle = () => {
     const [winners, setWinners] = useState([]);
 
     const [validWords, setValidWords] = useState([])
+    const [startAt, setStartAt] = useState(null);
+    const [started, setStarted] = useState(false);
+
+    const [startIn, setStartIn] = useState(null);
 
     const [words, setWords] = useState([]);
 
@@ -47,7 +51,26 @@ const GameShuffle = () => {
 
     const navigate = useNavigate();
 
+    const timerStartIn = () => {
+        if (started) {
+            return;
+        }
 
+        if (moment().diff(startAt, 'seconds') >= 0) {
+            setStarted(true);
+            return;
+        }
+
+        setStartIn(moment().diff(startAt, 'seconds'));
+
+        setTimeout(timerStartIn, 1000);
+    }
+
+    useEffect(() => {
+        if (!started && startAt) {
+            timerStartIn();
+        }
+    }, [startAt, started])
 
     const onHidden = async () => {
         if (focused) {
@@ -74,7 +97,7 @@ const GameShuffle = () => {
     useEffect(() => {
         const focusHandler = () => {
             console.log(new Date() - unfocusTime)
-            if (unfocusTime && (Math.abs(new Date() - unfocusTime) > 3000)) {
+            if (unfocusTime && (Math.abs(new Date() - unfocusTime) > 3000) && started) {
                 onHidden()
             }
         };
@@ -94,10 +117,12 @@ const GameShuffle = () => {
 
             setShuffledWords(res.data.shuffledWords);
             setHiddenWords(res.data.words);
-            setWinners(res.data.winners)
-            setFocused(res.data.focused)
-            setPlayersCount(res.data.playersCount)
-            setWords(res.data.shuffledWords.map(s => ''))
+            setWinners(res.data.winners);
+            setFocused(res.data.focused);
+            setPlayersCount(res.data.playersCount);
+            setWords(res.data.shuffledWords.map(s => ''));
+            setStarted(res.data.started);
+            setStartAt(moment(res.data.startAt));
 
         } catch (e) {
             console.error(e, e?.response?.data?.detail);
@@ -229,6 +254,17 @@ const GameShuffle = () => {
                 <NavBar />
                 <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
                     Desclassificado! Você saiu da tela.
+                </div>
+            </>
+        )
+    }
+
+    if (!started) {
+        return (
+            <>
+                <NavBar />
+                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+                    O jogo irá começar em {Math.abs(startIn)} segundos! Aguarde na tela para jogar!
                 </div>
             </>
         )
