@@ -222,7 +222,7 @@ const GameShuffle = () => {
 
     const Words = () => {
         return (
-            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} />
+            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} disabled={winners.length} />
         )
     }
 
@@ -242,7 +242,16 @@ const GameShuffle = () => {
             <>
                 <NavBar />
                 <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    {winners[0].username} ganhou!
+                    <div className="row">
+                        <div className="col">
+                            {winners[0].username} ganhou!
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <Words />
+                        </div>
+                    </div>
                 </div>
             </>
         )
