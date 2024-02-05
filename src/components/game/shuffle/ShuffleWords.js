@@ -70,11 +70,11 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFini
     }, [words]);
 
     useEffect(() => {
-        if (disabled && finished) {
+        if (finished) {
             console.log(words);
             onFinish(words);
         }
-    }, [disabled, finished])
+    }, [finished])
 
 
     // console.log(useMemo(() => <></>), [JSON.stringify(words)])
