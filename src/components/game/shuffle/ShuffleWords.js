@@ -12,7 +12,7 @@ const arePropEquals = (prev, next) => {
 
 
 
-const Line = ({ name, value, idx, words, setWords, validWords }) => {
+const Line = ({ name, value, idx, words, setWords, validWords, disabled }) => {
 
     const handleValueChange = (e) => {
         const w = JSON.parse(JSON.stringify(words));
@@ -34,21 +34,21 @@ const Line = ({ name, value, idx, words, setWords, validWords }) => {
     return (
         <div className="mb-3">
             <label htmlFor="name" className="form-label">{name}</label>
-            <input type="text" id="name" className={`form-control ${validWords.length && validWords[idx] ? 'is-valid' : 'is-invalid'}`} placeholder={name} value={words[idx] || ''} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
+            <input type="text" id="name" disabled={disabled} className={`form-control ${validWords.length && validWords[idx] ? 'is-valid' : 'is-invalid'}`} placeholder={name} value={words[idx] || ''} onChange={(e) => { handleValueChange(e) }} autoComplete="off" role="presentation" />
         </div>
     )
 }
 
 const MemoLine = React.memo(Line, arePropEquals)
 
-const ShuffleWords = ({ drawnWords, values, onSend, validWords }) => {
+const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled }) => {
     const [words, setWords] = useState(values?.length ? values : drawnWords.map(d => ''));
 
     return useMemo(
         () => <div className="container-fluid login-container pt-5 mt-4">
             <form>
                 <fieldset>
-                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} words={words} validWords={validWords} setWords={v => {
+                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} words={words} validWords={validWords} disabled={disabled} setWords={v => {
                         // console.log('value', v[idx]);
                         setWords(v)
                     }} />)}
