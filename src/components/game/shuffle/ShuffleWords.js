@@ -74,7 +74,7 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFini
             console.log(words);
             onFinish(words);
         }
-    }, [finished])
+    }, [words, finished])
 
 
     // console.log(useMemo(() => <></>), [JSON.stringify(words)])
