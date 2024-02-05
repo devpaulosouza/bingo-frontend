@@ -24,7 +24,9 @@ const GameShuffle = () => {
 
     const [validWords, setValidWords] = useState([])
 
-    const [words, setWords] = useState([])
+    const [words, setWords] = useState([]);
+
+    const [unfocusTime, setUnfocusTime] = useState(new Date())
 
     const [hiddenWords, setHiddenWords] = useState([])
 
@@ -62,7 +64,7 @@ const GameShuffle = () => {
     useEffect(() => {
         const focusHandler = () => {
             if (focused) {
-                onHidden()
+                setUnfocusTime(new Date())
             };
         };
         window.addEventListener("blur", focusHandler);
@@ -70,12 +72,16 @@ const GameShuffle = () => {
     }, [focused]);
 
     useEffect(() => {
-        setVisibilityState(document.visibilityState)
+        const focusHandler = () => {
+            console.log(new Date() - unfocusTime)
+            if (unfocusTime && (Math.abs(new Date() - unfocusTime) > 3000)) {
+                onHidden()
+            }
+        };
+        window.addEventListener("focus", focusHandler);
+        return () => window.removeEventListener("focus", focusHandler);
+    }, [unfocusTime, focused]);
 
-        if (document.visibilityState === 'hidden') {
-            onHidden();
-        }
-    }, [document.visibilityState])
 
     const resetGame = async (callback = () => { }) => {
         try {
