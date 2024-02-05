@@ -53,7 +53,7 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled }) => {
                         setWords(v)
                     }} />)}
                 </fieldset>
-                <Button onClick={() => onSend(words)}>Enviar</Button>
+                {!disabled && <Button onClick={() => onSend(words)}>Enviar</Button>}
             </form>
         </div>
         , [words])
