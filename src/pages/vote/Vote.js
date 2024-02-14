@@ -11,7 +11,7 @@ const Vote = () => {
     const [title, setTitle] = useState('');
     const [subtitle, setSubtitle] = useState('');
     const [options, setOptions] = useState([]);
-    const [recaptcha, setRecaptcha] = useState('');
+    const [recaptcha, setRecaptcha] = useState('');s
 
     const [voted, setVoted] = useState(false);
 
@@ -98,9 +98,7 @@ const Vote = () => {
                             </div>
                             <div className="row mt-3">
                                 <div className="col">
-                                    <div class="alert alert-success" role="alert">
-                                        <Button className="mt-3" onClick={handleVoteAgain}>VOTAR NOVAMENTE</Button>
-                                    </div>
+                                    <Button className="mt-3" onClick={handleVoteAgain}>VOTAR NOVAMENTE</Button>
                                 </div>
                             </div>
                         </div>
