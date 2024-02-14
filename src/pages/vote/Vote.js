@@ -65,31 +65,6 @@ const Vote = () => {
         fetchVotes();
     }, []);
 
-    if (voted) {
-        return (
-            <>
-                <NavBar />
-
-                <div className="container">
-                    <div className="row mt-5">
-                        <div className="col">
-                            <div class="alert alert-success" role="alert">
-                                Voto salvo com sucesso!
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row mt-3">
-                        <div className="col">
-                            <div class="alert alert-success" role="alert">
-                                <Button className="mt-3" onClick={handleVoteAgain}>VOTAR NOVAMENTE</Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </>
-        )
-    }
-
     return (
         <>
             <NavBar />
@@ -111,33 +86,59 @@ const Vote = () => {
                         }
                     </div>
                 </div>
-                <div className="row">
-                    <div className="col">
-                        <h4>{title}</h4>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <p>{subtitle}</p>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col">
-                        <form>
-                            {
-                                options.map(option => (
-                                    <div class="form-check">
-                                        <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadioDefault-${option.username}`} onClick={() => handleUsernameChange(option.username)} checked={option.username === username} />
-                                        <label class="form-check-label" for={`flexRadioDefault-${option.username}`}>
-                                            @{option.username} - {option.name}
-                                        </label>
+                {
+                    voted && (
+                        <div className="container">
+                            <div className="row mt-5">
+                                <div className="col">
+                                    <div class="alert alert-success" role="alert">
+                                        Voto salvo com sucesso!
                                     </div>
-                                ))
-                            }
-                            <Button className="mt-3" onClick={handleVote} disabled={!username}>VOTAR</Button>
-                        </form>
-                    </div>
-                </div>
+                                </div>
+                            </div>
+                            <div className="row mt-3">
+                                <div className="col">
+                                    <div class="alert alert-success" role="alert">
+                                        <Button className="mt-3" onClick={handleVoteAgain}>VOTAR NOVAMENTE</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    !voted && (
+                        <>
+                            <div className="row">
+                                <div className="col">
+                                    <h4>{title}</h4>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    <p>{subtitle}</p>
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col">
+                                    <form>
+                                        {
+                                            options.map(option => (
+                                                <div class="form-check">
+                                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadioDefault-${option.username}`} onClick={() => handleUsernameChange(option.username)} checked={option.username === username} />
+                                                    <label class="form-check-label" for={`flexRadioDefault-${option.username}`}>
+                                                        @{option.username} - {option.name}
+                                                    </label>
+                                                </div>
+                                            ))
+                                        }
+                                        <Button className="mt-3" onClick={handleVote} disabled={!username}>VOTAR</Button>
+                                    </form>
+                                </div>
+                            </div>
+                        </>
+                    )
+                }
             </div>
         </>
     )
