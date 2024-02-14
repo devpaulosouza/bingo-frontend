@@ -14,6 +14,11 @@ const NavBar = () => {
         navigate('/');
     }
 
+    const handleClickVote = (e) => {
+        e?.preventDefault();
+        navigate('/vote');
+    }
+
     const handleClickAdmin = async () => {
         const result = await Swal.fire({
             title: "Você pode mesmo entrar aqui?",
@@ -57,6 +62,18 @@ const NavBar = () => {
                         onClick={handleClickHome}
                     >
                         Início
+                    </Link>
+                    <Link
+                        activeClass={location.pathname === '/vote' ? "active" : "inactive"}
+                        to="/vote"
+                        spy={true}
+                        smooth={true}
+                        offset={-70}
+                        duration={800}
+                        className="nav-link"
+                        onClick={handleClickVote}
+                    >
+                        Votar
                     </Link>
                     <Link
                         activeClass={location.pathname === '/admin' ? "active" : "inactive"}

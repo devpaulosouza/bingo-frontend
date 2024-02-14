@@ -10,6 +10,7 @@ import Winner from './pages/winner/Winner';
 import Admin from './pages/admin/Admin';
 import Watch from './pages/watch/Watch';
 import Test from './pages/test/Test';
+import Vote from './pages/vote/Vote';
 
 const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
   {
     path: '/test',
     element: <Test />
+  }, 
+  {
+    path: '/vote',
+    element: <Vote />
   }
 ])
 

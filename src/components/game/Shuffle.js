@@ -76,12 +76,12 @@ const GameShuffle = () => {
 
     const onHidden = async () => {
         if (focused) {
-            try {
-                await shuffleApi.unfocus(id);
-                setFocused(false)
-            } catch (e) {
+            // try {
+            //     await shuffleApi.unfocus(id);
+            //     setFocused(false)
+            // } catch (e) {
 
-            }
+            // }
         }
     }
 
@@ -171,6 +171,8 @@ const GameShuffle = () => {
 
     const fetchValidWords = async (w) => {
         const res = await shuffleApi.setWordsFinished(id, { words: w });
+
+        console.log(res);
 
         setValidWords(res.data.validWords);
     }
@@ -263,63 +265,47 @@ const GameShuffle = () => {
     }, []);
 
     const Words = () => {
+        console.log([JSON.stringify(shuffledWords)])
         return (
-            <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} disabled={!!winners.length} onFinish={fetchValidWords} setValues={setWords} finished={finished} />
+            useMemo(
+                () => <ShuffleWords drawnWords={shuffledWords} onSend={handleSend} words={words} setWords={setWords} validWords={validWords} values={words} disabled={!!winners.length} onFinish={fetchValidWords} setValues={setWords} finished={finished} />,
+                [JSON.stringify(shuffledWords), JSON.stringify(validWords), finished]
+            )
         )
     }
 
-    if (winner) {
-        return (
-            <>
-                <NavBar />
-                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    Parabéns, você ganhou!
-                </div>
-            </>
-        )
-    }
+    // if (winner) {
+    //     return (
+    //         <>
+    //             <NavBar />
+    //             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+    //                 Parabéns, você ganhou!
+    //             </div>
+    //         </>
+    //     )
+    // }
 
-    if (winners.length) {
-        return (
-            <>
-                <NavBar />
-                <div className="container" style={{ height: '100%' }}>
-                    <div className="row">
-                        <div className="col mt-5 d-flex align-items-center justify-content-center">
-                            {winners[0].username} ganhou!
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            <Words />
-                        </div>
-                    </div>
-                </div>
-            </>
-        )
-    }
+    // if (!focused) {
+    //     return (
+    //         <>
+    //             <NavBar />
+    //             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+    //                 Desclassificado! Você saiu da tela.
+    //             </div>
+    //         </>
+    //     )
+    // }
 
-    if (!focused) {
-        return (
-            <>
-                <NavBar />
-                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    Desclassificado! Você saiu da tela.
-                </div>
-            </>
-        )
-    }
-
-    if (!started) {
-        return (
-            <>
-                <NavBar />
-                <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
-                    O jogo irá começar em {Math.abs(startIn)} segundos! Aguarde na tela para jogar!
-                </div>
-            </>
-        )
-    }
+    // if (!started) {
+    //     return (
+    //         <>
+    //             <NavBar />
+    //             <div className="container d-flex align-items-center justify-content-center" style={{ height: '100%' }}>
+    //                 O jogo irá começar em {Math.abs(startIn)} segundos! Aguarde na tela para jogar!
+    //             </div>
+    //         </>
+    //     )
+    // }
 
     return (
         <>
@@ -337,8 +323,17 @@ const GameShuffle = () => {
                             <h5>Não saia da página, ou irá perder automáticamente!</h5>
                         </div>
                     </div>
+                    {
+                        winners?.length && (
+                            <div className="row">
+                                <div className="col mt-5 d-flex align-items-center justify-content-center">
+                                    {winners[0].username} ganhou!
+                                </div>
+                            </div>
+                        )
+                    }
                     <div className="row">
-                        <Words />
+                        {useMemo(() => <Words shuffledWords={shuffledWords} />, [JSON.stringify(shuffledWords), finished, JSON.stringify(validWords)])}
                     </div>
                 </div>
             </div>

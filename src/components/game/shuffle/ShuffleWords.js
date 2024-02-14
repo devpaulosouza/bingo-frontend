@@ -4,9 +4,11 @@ import { debounce } from "../../utils";
 import { Button } from "react-bootstrap";
 
 const arePropEquals = (prev, next) => {
-    // console.log('prop', prev.words.map((w, i) => next[i] == w).reduce((p, c) => p && c, true))
+    console.log('prop', prev.validWords, next.validWords)
     return (
         prev.words.map((w, i) => next[i] == w).reduce((p, c) => p && c, true)
+        && prev.finished === next.finished
+        && JSON.stringify(prev.validWords) === JSON.stringify(next.validWords)
     )
 }
 
@@ -49,32 +51,39 @@ const MemoLine = React.memo(Line, arePropEquals)
 
 const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFinish, unfocusTime, setValues, finished }) => {
 
+    console.log(finished, values)
+
     // console.log(!unfocusTime, values)
     const [words, setWords] = useState(values?.length ? values : drawnWords.map(d => ''));
 
-    // useEffect(() => {
-    //     if (disabled) {
-    //         // onFinish(words);
-    //     }
-    // }, [words, disabled])
-
-    console.log(words, finished)
-
-
-    useEffect(() => {
-        const focusHandler = () => {
-            setValues(words)
-        };
-        window.addEventListener("blur", focusHandler);
-        return () => window.removeEventListener("blur", focusHandler);
-    }, [words]);
-
     useEffect(() => {
         if (finished) {
-            console.log(words);
+            console.log(words)
             onFinish(words);
         }
     }, [words, finished])
+
+    // console.log(values, words)
+
+
+    // useEffect(() => {
+    //     const focusHandler = (w) => {
+    //         console.log('blurrrr', w)
+    //         console.log(w)
+    //         setValues(w)
+    //     };
+    //     window.addEventListener("blur", () => focusHandler(words));
+    //     return () => window.removeEventListener("blur", focusHandler);
+    // }, [words]);
+
+    // useEffect(() => {
+    //     console.log(finished, words)
+    //     if (finished) {
+    //         console.log(words);
+    //         setValues(words);
+    //         onFinish(words);
+    //     }
+    // }, [words, finished])
 
 
     // console.log(useMemo(() => <></>), [JSON.stringify(words)])
@@ -83,7 +92,7 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFini
         () => <div className="container-fluid login-container pt-5 mt-4">
             <form>
                 <fieldset>
-                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} words={words} validWords={validWords} disabled={disabled} setWords={v => {
+                    {drawnWords?.map((i, idx) => <MemoLine name={i} value={''} idx={idx} key={i} words={words} validWords={validWords} disabled={disabled} finished={finished} setWords={v => {
                         // console.log('value', v[idx]);
                         setWords(v)
                     }} />)}
@@ -95,4 +104,4 @@ const ShuffleWords = ({ drawnWords, values, onSend, validWords, disabled, onFini
 
 }
 
-export default React.memo(ShuffleWords);
+export default React.memo(ShuffleWords, arePropEquals);
