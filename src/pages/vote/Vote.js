@@ -40,7 +40,9 @@ const Vote = () => {
                 setUsername('')
                 setVoted(true);
             } else {
-                setError(res.data.detail)
+                // setError(res.data.detail)
+                setUsername('')
+                setVoted(true);
             }
         } catch (e) {
             console.log(e);
