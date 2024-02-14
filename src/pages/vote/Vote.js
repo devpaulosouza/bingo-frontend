@@ -77,7 +77,7 @@ const Vote = () => {
                                     <GoogleReCaptchaProvider
                                         reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
                                     >
-                                        <GoogleReCaptcha onVerify={handleVerify}>
+                                        <GoogleReCaptcha onVerify={handleVerify} refreshReCaptcha={voted}>
 
                                         </GoogleReCaptcha>
                                     </GoogleReCaptchaProvider>
