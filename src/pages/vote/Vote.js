@@ -12,6 +12,7 @@ const Vote = () => {
     const [subtitle, setSubtitle] = useState('');
     const [options, setOptions] = useState([]);
     const [recaptcha, setRecaptcha] = useState('');
+    const [error, setError] = useState('');
 
     const [voted, setVoted] = useState(false);
 
@@ -27,6 +28,10 @@ const Vote = () => {
         setVoted(false);
     }
 
+    const handleRefreshPage = () => {
+        window.location.reload(); 
+    }
+
     const handleVote = async () => {
         try {
             const res = await voteApi.vote(pollId, username, recaptcha);
@@ -34,9 +39,12 @@ const Vote = () => {
             if (res.status === 204) {
                 setUsername('')
                 setVoted(true);
+            } else {
+                setError(res.data.detail)
             }
         } catch (e) {
             console.log(e);
+            setError(e.message)
         }
     }
 
@@ -82,12 +90,30 @@ const Vote = () => {
                                         </GoogleReCaptcha>
                                     </GoogleReCaptchaProvider>
                                 )
-                            }, [pollId])
+                            }, [pollId, voted])
                         }
                     </div>
                 </div>
                 {
-                    voted && (
+                    error && (
+                        <div className="container">
+                            <div className="row mt-5">
+                                <div className="col">
+                                    <div class="alert alert-danger" role="alert">
+                                        Erro: {error}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row mt-3">
+                                <div className="col">
+                                    <Button className="mt-3" onClick={handleRefreshPage}>TENTAR NOVAMENTE</Button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
+                {
+                    voted && !error && (
                         <div className="container">
                             <div className="row mt-5">
                                 <div className="col">
@@ -105,7 +131,7 @@ const Vote = () => {
                     )
                 }
                 {
-                    !voted && (
+                    !voted && !error && (
                         <>
                             <div className="row">
                                 <div className="col">
