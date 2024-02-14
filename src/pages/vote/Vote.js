@@ -78,7 +78,7 @@ const Vote = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="row mt-5">
+                    <div className="row mt-3">
                         <div className="col">
                             <div class="alert alert-success" role="alert">
                                 <Button className="mt-3" onClick={handleVoteAgain}>VOTAR NOVAMENTE</Button>
