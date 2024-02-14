@@ -1,30 +1,119 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import NavBar from "../../components/NavBar";
-import ReCAPTCHA from "react-google-recaptcha";
+import { GoogleReCaptchaProvider, GoogleReCaptcha } from 'react-google-recaptcha-v3';
+import { voteApi } from "../../api/voteApi";
+import { Button } from "react-bootstrap";
 
 const Vote = () => {
 
-    const handleChange = (e) => {
-        console.log(e);
+    const [pollId, setPollId] = useState('');
+    const [username, setUsername] = useState('');
+    const [title, setTitle] = useState('');
+    const [subtitle, setSubtitle] = useState('');
+    const [options, setOptions] = useState([]);
+    const [recaptcha, setRecaptcha] = useState('');
+    const [refresh, setRefresh] = useState(false);
+
+    const handleVerify = (value) => {
+        setRecaptcha(value);
     }
 
-    return(
+    const handleUsernameChange = (_username) => {
+        setUsername(_username);
+    }
+
+    const handleVote = async () => {
+        try {
+            const res = await voteApi.vote(pollId, username, recaptcha);
+
+            if (res.status === 204) {
+                setUsername('')
+                setRefresh(true);
+            }
+        } catch(e) {
+            console.log(e);
+        }
+    }
+
+    const fetchVotes = async () => {
+        try {
+            const res = await voteApi.getAll();
+
+            if (res.status === 200 && res.data.content.length) {
+                const pRes = await voteApi.getById(res.data.content[0].id);
+
+                if (pRes.status === 200) {
+                    setPollId(pRes.data.id);
+                    setOptions(pRes.data.options);
+                    setTitle(pRes.data.title);
+                    setSubtitle(pRes.data.subtitle);
+                }
+
+            }
+        } catch (e) {
+            console.log(e);
+        }
+    }
+
+    useEffect(() => {
+        console.log('fetching')
+        fetchVotes();
+    }, []);
+
+    useEffect(() => {
+        if (refresh) {
+            setRefresh(false);
+        }
+    }, [refresh])
+
+    console.log(title, subtitle)
+
+    return (
         <>
             <NavBar />
             <div className="container">
                 <div className="row mt-5">
                     <div className="col">
-                        <h3>Votação BBBB24</h3>
+                        {
+                            useMemo(() => {
+                                return (
+                                    <GoogleReCaptchaProvider
+                                        reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
+                                    >
+                                        <GoogleReCaptcha onVerify={handleVerify} refreshReCaptcha={refresh}>
+
+                                        </GoogleReCaptcha>
+                                    </GoogleReCaptchaProvider>
+                                )
+                            }, [pollId, refresh])
+                        }
                     </div>
                 </div>
                 <div className="row">
                     <div className="col">
-                        <ReCAPTCHA
-                            sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
-                            onChange={handleChange}
-                        >
-
-                        </ReCAPTCHA>
+                        <h4>{title}</h4>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <p>{subtitle}</p>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col">
+                        <form>
+                            {
+                                options.map(option => (
+                                    <div class="form-check">
+                                        <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadioDefault-${option.username}`} onClick={() => handleUsernameChange(option.username)} checked={option.username === username} />
+                                        <label class="form-check-label" for={`flexRadioDefault-${option.username}`}>
+                                            @{option.username} - {option.name}
+                                        </label>
+                                    </div>
+                                ))
+                            }
+                            <Button className="mt-3" onClick={handleVote} disabled={!username}>VOTAR</Button>
+                        </form>
                     </div>
                 </div>
             </div>
