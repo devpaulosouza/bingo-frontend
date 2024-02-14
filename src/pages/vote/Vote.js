@@ -12,7 +12,8 @@ const Vote = () => {
     const [subtitle, setSubtitle] = useState('');
     const [options, setOptions] = useState([]);
     const [recaptcha, setRecaptcha] = useState('');
-    const [refresh, setRefresh] = useState(false);
+
+    const [voted, setVoted] = useState(false);
 
     const handleVerify = (value) => {
         setRecaptcha(value);
@@ -22,15 +23,19 @@ const Vote = () => {
         setUsername(_username);
     }
 
+    const handleVoteAgain = () => {
+        setVoted(false);
+    }
+
     const handleVote = async () => {
         try {
             const res = await voteApi.vote(pollId, username, recaptcha);
 
             if (res.status === 204) {
                 setUsername('')
-                setRefresh(true);
+                setVoted(true);
             }
-        } catch(e) {
+        } catch (e) {
             console.log(e);
         }
     }
@@ -60,13 +65,30 @@ const Vote = () => {
         fetchVotes();
     }, []);
 
-    useEffect(() => {
-        if (refresh) {
-            setRefresh(false);
-        }
-    }, [refresh])
+    if (voted) {
+        return (
+            <>
+                <NavBar />
 
-    console.log(title, subtitle)
+                <div className="container">
+                    <div className="row mt-5">
+                        <div className="col">
+                            <div class="alert alert-success" role="alert">
+                                Voto salvo com sucesso!
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row mt-5">
+                        <div className="col">
+                            <div class="alert alert-success" role="alert">
+                                <Button className="mt-3" onClick={handleVoteAgain}>VOTAR NOVAMENTE</Button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
+    }
 
     return (
         <>
@@ -80,12 +102,12 @@ const Vote = () => {
                                     <GoogleReCaptchaProvider
                                         reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
                                     >
-                                        <GoogleReCaptcha onVerify={handleVerify} refreshReCaptcha={refresh}>
+                                        <GoogleReCaptcha onVerify={handleVerify}>
 
                                         </GoogleReCaptcha>
                                     </GoogleReCaptchaProvider>
                                 )
-                            }, [pollId, refresh])
+                            }, [pollId])
                         }
                     </div>
                 </div>
