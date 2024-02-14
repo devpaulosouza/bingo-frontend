@@ -11,7 +11,7 @@ const Vote = () => {
     const [title, setTitle] = useState('');
     const [subtitle, setSubtitle] = useState('');
     const [options, setOptions] = useState([]);
-    const [recaptcha, setRecaptcha] = useState('');s
+    const [recaptcha, setRecaptcha] = useState('');
 
     const [voted, setVoted] = useState(false);
 
