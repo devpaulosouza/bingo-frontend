@@ -45,8 +45,10 @@ const Vote = () => {
                 setVoted(true);
             }
         } catch (e) {
-            console.log(e);
-            setError(e.message)
+            // console.log(e);
+            // setError(e.message)
+            setUsername('')
+            setVoted(true);
         }
     }
 
