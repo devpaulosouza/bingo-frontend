@@ -11,6 +11,7 @@ import Admin from './pages/admin/Admin';
 import Watch from './pages/watch/Watch';
 import Test from './pages/test/Test';
 import Vote from './pages/vote/Vote';
+import VoteAdmin from './pages/voteAdmin/VoteAdmin';
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
   {
     path: '/vote',
     element: <Vote />
+  }, 
+  {
+    path: '/admin/vote',
+    element: <VoteAdmin />
   }
 ])
 

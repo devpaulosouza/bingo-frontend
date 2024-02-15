@@ -36,6 +36,23 @@ const NavBar = () => {
         }
     }
 
+    const handleClickAdminVote = async () => {
+        const result = await Swal.fire({
+            title: "Você pode mesmo entrar aqui?",
+            text: "Me prove isso!",
+            input: 'password',
+            showCancelButton: true,
+            confirmButtonColor: 'green'
+        });
+
+        if (result.value) {
+            console.log('set', result.value)
+            localStorage.setItem('password', result.value);
+            console.log('set', result.value)
+            navigate('/admin/vote')
+        }
+    }
+
 
     return (
         <Navbar
@@ -86,6 +103,18 @@ const NavBar = () => {
                         onClick={handleClickAdmin}
                     >
                         Admin
+                    </Link>
+                    <Link
+                        activeClass={location.pathname === '/admin/vote' ? "active" : "inactive"}
+                        to="#"
+                        spy={true}
+                        smooth={true}
+                        offset={-70}
+                        duration={800}
+                        className="nav-link"
+                        onClick={handleClickAdminVote}
+                    >
+                        Admin Votação
                     </Link>
                 </Nav>
             </Navbar.Collapse>
