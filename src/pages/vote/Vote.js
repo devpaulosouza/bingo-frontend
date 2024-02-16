@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import NavBar from "../../components/NavBar";
 import { GoogleReCaptchaProvider, GoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { voteApi } from "../../api/voteApi";
 import { Button } from "react-bootstrap";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Vote = () => {
 
@@ -15,6 +16,8 @@ const Vote = () => {
     const [error, setError] = useState('');
 
     const [voted, setVoted] = useState(false);
+
+    const recaptchaRef = useRef(null);
 
     const handleVerify = (value) => {
         setRecaptcha(value);
@@ -29,7 +32,7 @@ const Vote = () => {
     }
 
     const handleRefreshPage = () => {
-        window.location.reload(); 
+        window.location.reload();
     }
 
     const handleVote = async () => {
@@ -49,6 +52,12 @@ const Vote = () => {
             // setError(e.message)
             setUsername('')
             setVoted(true);
+        }
+        try {
+            recaptchaRef.current.reset()
+            setRecaptcha('')
+        } catch (e) {
+            console.log(e)
         }
     }
 
@@ -77,27 +86,12 @@ const Vote = () => {
         fetchVotes();
     }, []);
 
+    console.log(recaptcha)
+
     return (
         <>
             <NavBar />
             <div className="container">
-                <div className="row mt-5">
-                    <div className="col">
-                        {
-                            useMemo(() => {
-                                return (
-                                    <GoogleReCaptchaProvider
-                                        reCaptchaKey={process.env.REACT_APP_RECAPTCHA_KEY}
-                                    >
-                                        <GoogleReCaptcha onVerify={handleVerify} refreshReCaptcha={voted}>
-
-                                        </GoogleReCaptcha>
-                                    </GoogleReCaptchaProvider>
-                                )
-                            }, [pollId, voted])
-                        }
-                    </div>
-                </div>
                 {
                     error && (
                         <div className="container">
@@ -147,28 +141,46 @@ const Vote = () => {
                                     <p>{subtitle}</p>
                                 </div>
                             </div>
+
                             <div className="row">
                                 <div className="col">
                                     <form>
                                         {
                                             options.map(option => (
                                                 <div class="form-check">
-                                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadioDefault-${option.username}`} onClick={() => handleUsernameChange(option.username)} checked={option.username === username} />
+                                                    <input className="form-check-input" type="radio" name="flexRadioDefault" id={`flexRadioDefault-${option.username}`} onChange={() => handleUsernameChange(option.username)} checked={option.username === username} />
                                                     <label class="form-check-label" for={`flexRadioDefault-${option.username}`}>
                                                         @{option.username} - {option.name}
                                                     </label>
                                                 </div>
                                             ))
                                         }
-                                        <Button className="mt-3" onClick={handleVote} disabled={!username}>VOTAR</Button>
+
+                                        <div className="row mt-5">
+                                            <div className="col">
+                                                <ReCAPTCHA
+                                                    style={{ display: "inline-block" }}
+                                                    ref={recaptchaRef}
+                                                    sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+                                                    onChange={handleVerify}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="rol">
+                                            <div className="col">
+                                                <Button className="mt-3" onClick={handleVote} disabled={!username || !recaptcha}>VOTAR</Button>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
                         </>
                     )
                 }
+
             </div>
         </>
+
     )
 }
 
