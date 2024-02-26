@@ -163,7 +163,7 @@ const GameBingo = () => {
                     onGameMode(data.mode);
                     break;
                 case ("JOIN"):
-                    resetBoard();
+                    setPlayersCount(data.playersCount);
                     break;
                 case ("KICK"):
                     onKick();
