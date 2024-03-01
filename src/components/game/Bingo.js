@@ -250,6 +250,11 @@ const GameBingo = () => {
                             <p>Jogadores online: {playersCount}</p>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>v1.0.0</p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="row">
