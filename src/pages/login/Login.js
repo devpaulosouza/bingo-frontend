@@ -210,8 +210,8 @@ const Login = () => {
                             <input type="text" id="name" className="form-control" placeholder="Nome" value={name} onChange={handleNameChange} />
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="username" className="form-label">Usuário do X (Twitter)</label>
-                            <input type="text" id="username" className="form-control" placeholder="Usuário do X (Twitter)" value={username} onChange={handleUserNameChange} spellCheck="false" autoCapitalize="none" autoCorrect="off" />
+                            <label htmlFor="username" className="form-label">e-mail</label>
+                            <input type="text" id="username" className="form-control" placeholder="e-mail" value={username} onChange={handleUserNameChange} spellCheck="false" autoCapitalize="none" autoCorrect="off" />
                         </div>
                         {
                             hasPassword && (

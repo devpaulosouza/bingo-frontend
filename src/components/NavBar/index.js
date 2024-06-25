@@ -62,7 +62,7 @@ const NavBar = () => {
             className="navbar navbar-expand-lg navbar-dark navbar-custom"
             collapseOnSelect={true}
         >
-            <a className="navbar-brand" onClick={handleClickHome} href="/" style={{ marginLeft: 32 }}>Saapatona</a>
+            <a className="navbar-brand" onClick={handleClickHome} href="/" style={{ marginLeft: 32 }}>Stoom</a>
 
             <Navbar.Toggle aria-controls="basic-navbar-nav" className="toggle" />
 
@@ -81,18 +81,6 @@ const NavBar = () => {
                         Início
                     </Link>
                     <Link
-                        activeClass={location.pathname === '/vote' ? "active" : "inactive"}
-                        to="/vote"
-                        spy={true}
-                        smooth={true}
-                        offset={-70}
-                        duration={800}
-                        className="nav-link"
-                        onClick={handleClickVote}
-                    >
-                        Votar
-                    </Link>
-                    <Link
                         activeClass={location.pathname === '/admin' ? "active" : "inactive"}
                         to="#"
                         spy={true}
@@ -103,18 +91,6 @@ const NavBar = () => {
                         onClick={handleClickAdmin}
                     >
                         Admin
-                    </Link>
-                    <Link
-                        activeClass={location.pathname === '/admin/vote' ? "active" : "inactive"}
-                        to="#"
-                        spy={true}
-                        smooth={true}
-                        offset={-70}
-                        duration={800}
-                        className="nav-link"
-                        onClick={handleClickAdminVote}
-                    >
-                        Admin Votação
                     </Link>
                 </Nav>
             </Navbar.Collapse>
