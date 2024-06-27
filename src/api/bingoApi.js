@@ -41,4 +41,6 @@ export const bingoApi = {
         }
     ),
     hasPassword: () => axiosConfig.get(`/games/bingo/has-password`),
+    getPlayer: (username) => axiosConfig.get(`/games/bingo/players/${username}`)
+
 }

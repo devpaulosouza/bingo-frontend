@@ -68,7 +68,7 @@ const Login = () => {
             }
 
             if (res.status == 200) {
-                navigate('game', { state: { id, numbers: res.data.numbers, gameType } });
+                navigate('game', { state: { id, numbers: res.data.numbers, gameType, username } });
             }
 
             if (connection) {
