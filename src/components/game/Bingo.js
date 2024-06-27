@@ -182,7 +182,7 @@ const GameBingo = () => {
             setId(res.data.id);
 
             
-            navigate(".", { ...location.state, id: res.data.id });
+            // navigate(".", { ...location.state, id: res.data.id });
 
             resetBoard(res.data.id)
 
