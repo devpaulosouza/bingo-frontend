@@ -177,7 +177,7 @@ const GameBingo = () => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
 
-            const res = await bingoApi.getPlayer(username);
+            const res = await bingoApi.getPlayer(username?.replaceAll('@', ''));
 
             setId(res.data.id);
 
