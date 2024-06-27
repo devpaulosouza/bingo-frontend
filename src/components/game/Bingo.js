@@ -260,7 +260,7 @@ const GameBingo = () => {
                     </div>
                     <div className="row">
                         <div className="col">
-                            <p>v1.0.0</p>
+                            <p>v1.0.1</p>
                         </div>
                     </div>
                 </div>
