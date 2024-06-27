@@ -14,6 +14,7 @@ const GameBingo = () => {
 
     const location = useLocation();
     const id = location.state?.id;
+    const username = location.state?.username;
     const [numbers, setNumbers] = useState(location.state?.numbers);
     const [topics, setTopics] = useState([]);
     const [number, setNumber] = useState(0);
@@ -130,9 +131,9 @@ const GameBingo = () => {
         navigate('/');
     }
 
-    const connect = () => {
+    const connect = (_playerId) => {
         const sseForUsers = new EventSource(
-            `${SOCKET_URL}/connect/players/${id}`,
+            `${SOCKET_URL}/connect/players/${_playerId || id}`,
             {
                 withCredentials: false,
             }
@@ -163,7 +164,7 @@ const GameBingo = () => {
                     onGameMode(data.mode);
                     break;
                 case ("JOIN"):
-                    resetBoard();
+                    setPlayersCount(data.playersCount);
                     break;
                 case ("KICK"):
                     onKick();
@@ -172,10 +173,13 @@ const GameBingo = () => {
             }
         })
 
-        sseForUsers.onerror = (error) => {
+        sseForUsers.onerror = async (error) => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
-            setTimeout(connect, 2000);
+
+            const res = await bingoApi.getPlayer(username);
+
+            setTimeout(() => connect(res.data.id), 2000);
         };
     }
 
@@ -248,6 +252,11 @@ const GameBingo = () => {
                     <div className="row">
                         <div className="col">
                             <p>Jogadores online: {playersCount}</p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <p>v1.0.0</p>
                         </div>
                     </div>
                 </div>
