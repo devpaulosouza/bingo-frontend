@@ -13,7 +13,7 @@ const SOCKET_URL = `${process.env.REACT_APP_SAAPATONA_API_URL}/games/bingo`;
 const GameBingo = () => {
 
     const location = useLocation();
-    const id = location.state?.id;
+    const [id, setId] = useState(location.state?.id);
     const username = location.state?.username;
     const [numbers, setNumbers] = useState(location.state?.numbers);
     const [topics, setTopics] = useState([]);
@@ -36,11 +36,11 @@ const GameBingo = () => {
 
     const [started, setStarted] = useState(false);
 
-    const resetBoard = async () => {
+    const resetBoard = async (_id) => {
         let tries = 10;
         try {
             while (tries > 0) {
-                const res = await bingoApi.getByPlayerId(id);
+                const res = await bingoApi.getByPlayerId(_id || id);
 
                 setNumbers(res.data.card.numbers);
                 setDrawnNumbers(res.data.drawnNumbers);
@@ -178,6 +178,10 @@ const GameBingo = () => {
             sseForUsers.close();
 
             const res = await bingoApi.getPlayer(username);
+
+            setId(res.data.id);
+
+            resetBoard(res.data.id)
 
             setTimeout(() => connect(res.data.id), 2000);
         };
