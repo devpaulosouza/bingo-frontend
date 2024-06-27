@@ -177,7 +177,7 @@ const GameBingo = () => {
             console.log("SSE For Users error", error);
             sseForUsers.close();
 
-            const res = await bingoApi.getPlayer(username);
+            const res = await bingoApi.getPlayer(username?.replaceAll('@', ''));
 
             setId(res.data.id);
 
@@ -260,7 +260,7 @@ const GameBingo = () => {
                     </div>
                     <div className="row">
                         <div className="col">
-                            <p>v1.0.0</p>
+                            <p>v1.0.1</p>
                         </div>
                     </div>
                 </div>
